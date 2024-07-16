@@ -1,0 +1,42 @@
+.tool-button {
+    width: 54px;
+    height: 54px;
+    background-color: rgb(255, 255, 255);
+    margin: 8px;
+    flex-shrink: 0;
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+    border-bottom-left-radius: 50%;
+}
+
+.Tools_Root {
+    width: 70px;
+    height: 70px;
+    background-color: rgb(147, 147, 147);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    padding-left: 0;
+}
+
+.tool-button:hover {
+    background-color: rgba(137, 137, 137, 0.43);
+    width: 64px;
+    height: 64px;
+    transition-property: width, height;
+    transition-duration: 0.025s, 0.025s;
+}
+
+.Tools_Root:hover {
+    transition-property: width, height;
+    transition-duration: 0.1s, 0.1s;
+    width: 80px;
+    height: 80px;
+    transition-timing-function: ease-in-back, ease-in-back;
+}

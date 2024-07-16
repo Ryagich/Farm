@@ -27,12 +27,10 @@ namespace Code.PlayerMovement
             {
                 newVelocity = Vector2.zero;
             }
-            if (!_controller.isGrounded)
-            {
-                newVelocity = Vector2.zero;
-            }
+            //Почему то не работает
+            //if (!_controller.isGrounded) { newVelocity = Vector2.zero; }
             velocity = newVelocity;
-            GameStateController.Instance.IsStanding = velocity is { x: 0, y: 0 };
+            GameStateController.Instance.IsMoving = velocity is not { x: 0, y: 0 };
             _velocityChanged?.Invoke(velocity);
         }
 

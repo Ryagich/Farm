@@ -12,9 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3e235ce65a6492aa3f970ac4dc9841c, type: 3}
   m_Name: GridSettings
   m_EditorClassIdentifier: 
-  Info:
-  - <StartPoint>k__BackingField: {x: 10, y: 0, z: 0}
-    <Size>k__BackingField: {x: 3, y: 5}
-  - <StartPoint>k__BackingField: {x: 0, y: 0, z: 0}
-    <Size>k__BackingField: {x: 5, y: 13}
-  yOffset: 0.01
+  <Info>k__BackingField:
+  - <Position>k__BackingField: {x: 0, y: 0, z: 0}
+    <Size>k__BackingField: {x: 3, y: 3}
+    <Type>k__BackingField: 0
+  - <Position>k__BackingField: {x: 3, y: 0, z: 0}
+    <Size>k__BackingField: {x: 3, y: 3}
+    <Type>k__BackingField: 0
+  <yOffset>k__BackingField: 0.01
+  <TilePref>k__BackingField: {fileID: 7887784229667771915, guid: 80e6cdc1ec6007445b69a9938f7584f8, type: 3}
+  <Parent>k__BackingField: {fileID: 6626901405037870352, guid: 3f59c0205fc64fc43a8e57fe655aab3d, type: 3}

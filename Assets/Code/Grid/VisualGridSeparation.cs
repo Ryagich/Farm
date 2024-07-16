@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Code.Grid
 {
     public class VisualGridSeparation : MonoBehaviour
     {
         [SerializeField] private GridSettings _settings;
-        [SerializeField] private Grid _grid;
 
         private void Start()
         {
@@ -36,15 +34,15 @@ namespace Code.Grid
         {
             for (var i = 0; i < _settings.Info.Count; i++)
             {
-                var line = _grid.Parents[i].GetComponentInChildren<LineRenderer>();
+                var line = GridSpawner.Instance.Parents[i].GetComponentInChildren<LineRenderer>();
                 line.positionCount = 0;
             }
         }
-
+        
         [Button("Draw")]
         private void Draw()
         {
-            var scale = _grid._tile.transform.localScale;
+            var scale = _settings.TilePref.transform.localScale;
             for (var i = 0; i < _settings.Info.Count; i++)
             {
                 var points = new List<Vector3>();
@@ -61,7 +59,7 @@ namespace Code.Grid
                     points.Add(p1);
                     points.Add(p2);
                 }
-
+        
                 for (var x = info.Size.x; x >= 0; x--)
                 {
                     var offset = scale.x * x;
@@ -74,7 +72,7 @@ namespace Code.Grid
                     points.Add(p1);
                     points.Add(p2);
                 }
-                var line = _grid.Parents[i].GetComponentInChildren<LineRenderer>();
+                var line = GridSpawner.Instance.Parents[i].GetComponentInChildren<LineRenderer>();
                 line.positionCount = points.Count;
                 line.SetPositions(points.ToArray());
             }
