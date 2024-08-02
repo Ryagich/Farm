@@ -1,0 +1,22 @@
+.Background {
+    background-color: rgb(120, 120, 120);
+}
+
+.Background:hover {
+    background-color: rgb(150, 150, 150);
+}
+
+.StorageButton {
+    transition-property: all;
+    transition-duration: 0s;
+    transition-timing-function: ease;
+    transition-delay: 0s;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}

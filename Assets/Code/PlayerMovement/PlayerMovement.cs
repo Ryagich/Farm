@@ -1,6 +1,8 @@
+using Code.Game;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using Zenject;
 
 namespace Code.PlayerMovement
 {
@@ -13,24 +15,31 @@ namespace Code.PlayerMovement
         [SerializeField, Min(.0f)] private float _speed = 5f;
 
         private Vector2 velocity;
-
+        private GameStateController gameStateC;
+        
+        [Inject]
+        private void Constructor(GameStateController gameStateC)
+        {
+            this.gameStateC = gameStateC;
+        }
+        
         private void Awake()
         {
             _moveInput.action.performed += OnTryMove;
             _moveInput.action.canceled += OnTryMove;
         }
-
+        
         private void OnTryMove(InputAction.CallbackContext context)
         {
             var newVelocity = context.ReadValue<Vector2>();
-            if (GameStateController.Instance.GameState == GameStates.Redactor)
+            if (gameStateC.GameState.Value == GameStates.Redactor)
             {
                 newVelocity = Vector2.zero;
             }
             //Почему то не работает
             //if (!_controller.isGrounded) { newVelocity = Vector2.zero; }
             velocity = newVelocity;
-            GameStateController.Instance.IsMoving = velocity is not { x: 0, y: 0 };
+            gameStateC.IsMoving = velocity is not { x: 0, y: 0 };
             _velocityChanged?.Invoke(velocity);
         }
 

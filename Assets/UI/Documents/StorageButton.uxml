@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Styles/Background.uss?fileID=7433441132597879392&amp;guid=1db2418b28163fb408c6ee71de40e608&amp;type=3#Background" />
+    <ui:VisualElement name="Button" class="StorageButton" style="width: 64px; height: 82px;">
+        <ui:VisualElement name="Background" class="Background" style="width: 100%; height: 75%; position: relative; border-top-left-radius: 32px; border-top-right-radius: 32px; border-bottom-right-radius: 32px; border-bottom-left-radius: 32px; align-items: auto; opacity: 1;">
+            <ui:VisualElement name="Icon" style="width: 75%; height: 75%; background-image: url(&apos;project://database/Assets/Images/box.png?fileID=21300000&amp;guid=cf5e4c9bde668e94b8a613820b132be0&amp;type=3#box&apos;); margin-top: 8px; margin-right: 8px; margin-bottom: 8px; margin-left: 8px;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Text_Background" style="flex-grow: 1; background-color: rgb(0, 0, 0); width: 75%; height: 25%; transform-origin: center; align-self: center;">
+            <ui:Label tabindex="-1" text="300$" display-tooltip-when-elided="true" name="Text" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; color: rgb(255, 255, 255); align-self: center; -unity-text-align: middle-center; width: 100%; height: 100%;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

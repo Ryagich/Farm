@@ -1,0 +1,18 @@
+.Storage {
+    align-self: center;
+    width: 420px;
+    height: 92px;
+    margin-bottom: 32px;
+    background-color: rgb(255, 255, 255);
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    border-bottom-left-radius: 12px;
+    transition-property: all;
+    transition-duration: 0s;
+    transition-timing-function: ease;
+    transition-delay: 0s;
+    margin-top: 0;
+    margin-right: 0;
+    margin-left: 0;
+}

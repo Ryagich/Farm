@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e34b7f60e6899c24685057d8ce553d09, type: 3}
+  m_Name: Input
+  m_EditorClassIdentifier: 
+  <LeftMouse>k__BackingField: {fileID: -8639855804777669308, guid: dc57aa01b6f5c224ba9ba6d860fc1bb3, type: 3}
+  <RightMouse>k__BackingField: {fileID: -2516813113608389922, guid: dc57aa01b6f5c224ba9ba6d860fc1bb3, type: 3}
+  <Control>k__BackingField: {fileID: -151165441366042419, guid: dc57aa01b6f5c224ba9ba6d860fc1bb3, type: 3}
+  <R>k__BackingField: {fileID: 3702981075223176153, guid: dc57aa01b6f5c224ba9ba6d860fc1bb3, type: 3}

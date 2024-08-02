@@ -1,13 +1,14 @@
-using UnityEngine;
+using Code.Game;
 using UnityEngine.UIElements;
 
-public class ToolsView : MonoBehaviour
+namespace Code.UI
 {
-    [SerializeField] private UIDocument _screen;
-
-    private void Start()
+    public class ToolsView
     {
-        var openButton = _screen.rootVisualElement.Q<VisualElement>("Open_Button");
-        openButton.RegisterCallback<ClickEvent>(_ => GameStateController.Instance.ChangeState());
+        private ToolsView(UIDocument screen,GameStateController gameStateController)
+        {
+            var openButton = screen.rootVisualElement.Q<VisualElement>("Open_Button");
+            openButton.RegisterCallback<ClickEvent>(_ => gameStateController.ChangeState());
+        }
     }
 }
