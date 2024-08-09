@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using Code.Digging.Grid;
 using Code.Digging.Grid.Utils;
 using Code.Game;
-using Code.Grid.Utils;
+using Code.Grid;
 using UniRx;
 using UnityEngine;
 
-namespace Code.Grid
+namespace Code.Digging.Grid
 {
     public class GridMediator
     {
         private GridSettings settings;
-        private GridSpawner spawner;
         private VisualGridSeparation separation;
         private GridVisualizationForGarden visualizationForGarden;
         
@@ -28,7 +26,6 @@ namespace Code.Grid
                              GameStateController gameStateController)
         {
            this.settings = settings;
-           this.spawner = spawner;
            this.separation = separation;
            this.visualizationForGarden = visualizationForGarden;
 
@@ -65,14 +62,14 @@ namespace Code.Grid
 
         public bool CanPlace(Vector2Int size)
         {
-           var currTiles = tiles.GetTilesAround(GridRaycaster.GetRaycastPosition(),size);
+           var currTiles = tiles.GetTilesAround(GridRaycaster.GetRaycastIntPosition(),size);
            if (currTiles.Count < size.x * size.y)
            {
                return false;
            }
            foreach (var tile in currTiles)
            {
-               if (tile.State == TileState.Busy)
+               if (!tile.IsFree)
                {
                    return false;
                }
@@ -80,20 +77,35 @@ namespace Code.Grid
            return true;
         }
         
-        public void ChangeGardenTilesState(Vector2Int size)
+        public List<Tile> ChangeGardenTilesState(Vector2Int size, Building.Building building)
         {
-            var position = GridRaycaster.GetRaycastPosition();
-
-            foreach (var tile in tiles.GetTilesAround(position, size))
+            var position = GridRaycaster.GetRaycastIntPosition();
+            var tilesAround = tiles.GetTilesAround(position, size);
+            
+            foreach (var tile in tilesAround)
             {
-                tile.ChangeTileState(TileState.Busy);
+                tile.SetBuilding(building);
             }
+            return tilesAround;
         }
         
         public void VisualizationTiles(Vector2Int size, Vector2Int position)
         {
             visualizationForGarden.SetTilesPosition(tiles.GetTilesAround(position, size),gardenTiles);
             visualizationForGarden.PaintTiles(tiles.GetTilesAround(position, size),gardenTiles, settings);
+        }
+
+        public bool TryGetTileOnMouse(out Tile tile)
+        {
+            tile = null;
+            var position = GridRaycaster.GetRaycastIntPosition();
+            if (position.x >= 0 && position.x < tiles.GetLength(0)
+             && position.y >= 0 && position.y < tiles.GetLength(1))
+            {
+                tile = tiles[position.x, position.y];
+                return true;
+            }
+            return false;
         }
         
         private void OnChangedGameState(GameStates currentState)

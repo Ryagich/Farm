@@ -1946,6 +1946,7 @@ GameObject:
   - component: {fileID: 156589763}
   - component: {fileID: 156589764}
   - component: {fileID: 156589765}
+  - component: {fileID: 156589766}
   m_Layer: 0
   m_Name: SceneContext
   m_TagString: Untagged
@@ -2005,12 +2006,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers: []
   _monoInstallers:
-  - {fileID: 156589758}
-  - {fileID: 156589759}
   - {fileID: 156589760}
+  - {fileID: 156589759}
+  - {fileID: 156589758}
   - {fileID: 156589763}
   - {fileID: 156589764}
   - {fileID: 156589765}
+  - {fileID: 156589766}
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:
@@ -2082,6 +2084,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _keys: {fileID: 11400000, guid: 94e30e03fedfe834f81a95856f92bc4e, type: 2}
+--- !u!114 &156589766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 156589757}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d62522ce4a6344309fd4e109a06b1cd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _config: {fileID: 11400000, guid: 04613a748fb1e0e45accde6d18f86339, type: 2}
 --- !u!1 &166159009
 GameObject:
   m_ObjectHideFlags: 0
@@ -5855,8 +5870,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c73a84eae79f714498a9f094af10ea39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _screen: {fileID: 424009687}
-  _gardensInfo: {fileID: 11400000, guid: ecfb427929d1558478bb1be6246d6c81, type: 2}
   _buttonTree: {fileID: 9197481963319205126, guid: 237be1d9095cbb247a212eaa3ce3b66f, type: 3}
   _startMargin: 75
   _endMargin: 15

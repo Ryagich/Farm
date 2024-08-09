@@ -1,0 +1,7 @@
+.MenuButtonBackground {
+    background-color: rgb(255, 255, 255);
+}
+
+.MenuButtonBackground:hover {
+    background-color: rgb(170, 170, 170);
+}

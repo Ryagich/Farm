@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using Code.Digging.Garden;
+using Code.Digging.Grid;
+using Code.Digging.Grid.Utils;
 using Code.Game;
 using Code.Grid;
-using Code.Grid.Utils;
 using Code.Input;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -18,7 +19,6 @@ namespace Code.Digging
         private GameStateController gameStateC;
 
         private Coroutine coroutine;
-        private Vector2Int size;
         private InputHandler inputHandler;
         
         [Inject]
@@ -37,13 +37,10 @@ namespace Code.Digging
 
         private void Rotate(InputAction.CallbackContext context)
         {
-            Debug.Log($"Rotate");
-            Debug.Log($"Control Pressed is {inputHandler.ControlPressed}");
-
             if (context.phase == InputActionPhase.Canceled
                 && inputHandler.ControlPressed)
             {
-                size = new Vector2Int(size.y, size.x);
+                var size = new Vector2Int(gardenSpawner.Building.Size.y, gardenSpawner.Building.Size.x);
                 gardenSpawner.Destroy();
                 gardenSpawner.Spawn(size);
             }
@@ -51,7 +48,16 @@ namespace Code.Digging
         
         public void ShowGarden(GardenInfo info)
         {
-            size = info.Size;
+            ShowGarden(info.Size);
+        }
+        
+        public void ShowGarden(Vector2Int size)
+        {
+            if (coroutine != null)
+            {
+                Cancel();
+                gardenSpawner.Destroy();
+            }
             gardenSpawner.Spawn(size);
             gridMediator.SetGardenTiles(size);
             coroutine = StartCoroutine(MoveCor());
@@ -65,9 +71,9 @@ namespace Code.Digging
         {
             while (true)
             {
-                var position = GridRaycaster.GetRaycastPosition();
-                gridMediator.VisualizationTiles(size, position);
-                gardenSpawner.VisualizationGarden(position, gridMediator.CanPlace(size));
+                var position = GridRaycaster.GetRaycastIntPosition();
+                gridMediator.VisualizationTiles(gardenSpawner.Building.Size, position);
+                gardenSpawner.VisualizationGarden(position, gridMediator.CanPlace(gardenSpawner.Building.Size));
                 yield return null;
             }
         }
@@ -76,10 +82,10 @@ namespace Code.Digging
         {
             if (context.phase == InputActionPhase.Canceled
                 && coroutine != null
-                && gridMediator.CanPlace(size))
+                && gridMediator.CanPlace(gardenSpawner.Building.Size))
             {
-                gridMediator.ChangeGardenTilesState(size);
-                gardenSpawner.SetGarden();
+                var tiles = gridMediator.ChangeGardenTilesState(gardenSpawner.Building.Size, gardenSpawner.Building);
+                gardenSpawner.SetGarden(tiles);
                 Cancel();
             }
         }

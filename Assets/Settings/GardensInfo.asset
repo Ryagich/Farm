@@ -31,4 +31,4 @@ MonoBehaviour:
   <Ghost_Material>k__BackingField: {fileID: 2100000, guid: 3d4ae7c7b1d942843bd1b266e0d5ba9d, type: 2}
   <RedGhost_Material>k__BackingField: {fileID: 2100000, guid: 66084adb77a2e334aaf40700278bc837, type: 2}
   <Garden_Material>k__BackingField: {fileID: 2100000, guid: 67f1a89d699567f48832893c01c2242a, type: 2}
-  <GardenPref>k__BackingField: {fileID: 3711471672510012848, guid: 70b68ace85ca6cd40934b56673dfcea0, type: 3}
+  <BuildingPref>k__BackingField: {fileID: 3711471672510012848, guid: 70b68ace85ca6cd40934b56673dfcea0, type: 3}

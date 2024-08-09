@@ -25,15 +25,9 @@ namespace Code.Digging.Grid
         {
             for (var i = 0; i < tiles.Count; i++)
             {
-                switch (tiles[i].State)
-                {
-                    case TileState.Clear:
-                        gardenTiles[i].GetComponent<MeshRenderer>().material = settings.ClearMaterial;
-                        break;
-                    case TileState.Busy:
-                        gardenTiles[i].GetComponent<MeshRenderer>().material = settings.BusyMaterial;
-                        break;
-                }
+                gardenTiles[i].GetComponent<MeshRenderer>().material = tiles[i].IsFree
+                                                                     ? settings.ClearMaterial
+                                                                     : settings.BusyMaterial;
             }
         }
     }

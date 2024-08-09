@@ -1,3 +1,4 @@
+using Code.Digging.Grid;
 using UnityEngine;
 
 namespace Code.Grid

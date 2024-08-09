@@ -1,10 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Code.Digging;
 using Code.Digging.Garden;
-using Code.Garden;
-using Code.Grid;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Zenject;
@@ -13,8 +10,6 @@ namespace Code.UI.Storage
 {
     public class StorageButtons : MonoBehaviour
     {
-        [SerializeField] private UIDocument _screen;
-        [SerializeField] private GardensInfo _gardensInfo;
         [SerializeField] private VisualTreeAsset _buttonTree;
         [Space]
         [SerializeField] private float _startMargin = 150f;
@@ -22,15 +17,22 @@ namespace Code.UI.Storage
         [SerializeField] private float _delay = .2f;
         [SerializeField] private float _translation = 1f;
         [SerializeField] private EasingMode _easing;
-
+        
+        private UIDocument screen;
+        private GardensInfo gardensInfo;
+        
         private VisualElement container;
         private WaitForSeconds wait;
         private Coroutine coroutine;
         private DiggingController diggingC;
         
         [Inject]
-        private void Container(DiggingController diggingC)
+        private void Constructor(UIDocument screen,
+                                 DiggingController diggingC,
+                                 GardensInfo gardensInfo)
         {
+            this.screen = screen;
+            this.gardensInfo = gardensInfo;
             this.diggingC = diggingC;
         }
         
@@ -42,7 +44,7 @@ namespace Code.UI.Storage
         public void SpawnButtons()
         {
             wait = new WaitForSeconds(_delay);
-            container = _screen.rootVisualElement.Q<VisualElement>("Storage_Container");
+            container = screen.rootVisualElement.Q<VisualElement>("Storage_Container");
             coroutine = StartCoroutine(SpawnButtonsCor());
         }
 
@@ -58,7 +60,7 @@ namespace Code.UI.Storage
         private IEnumerator SpawnButtonsCor()
         {
             var buttonsSize = .0f;
-            foreach (var info in _gardensInfo.Info)
+            foreach (var info in gardensInfo.Info)
             {
                 // Хардкожу button width поскольку не могу получить значение (button width = 64)
                 //TODO: Если кнопок больше чем может вместиться - показывать стрелочки прокрутки кнопок

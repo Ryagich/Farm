@@ -1,13 +1,13 @@
-﻿using Code.Digging.Grid;
-using UnityEditor;
-using UnityEditor.VersionControl;
+﻿using System.Collections.Generic;
+using Code.Digging.Grid;
 using UnityEngine;
 
 namespace Code.Digging.Garden
 {
     public class GardenSpawner
     {
-        private Garden garden;
+        public Building.Building Building { get; private set; }
+        
         private GridSettings settings;
         private GardensInfo gardensInfo;
 
@@ -20,27 +20,27 @@ namespace Code.Digging.Garden
 
         public void Spawn(Vector2Int size)
         {
-            garden = MonoBehaviour.Instantiate(gardensInfo.GardenPref);
-            var scale = garden.transform.localScale;
-            garden.transform.localScale = new Vector3(scale.x * size.x, scale.z, scale.y * size.y);
+            Building = MonoBehaviour.Instantiate(gardensInfo.BuildingPref);
+            Building.SetSize(size);
         }
         
-        public void SetGarden()
+        public void SetGarden(List<Tile> tiles)
         {
-            garden.Visual.GetComponent<MeshRenderer>().material = gardensInfo.Garden_Material;
-            garden = null;
+            Building.Visual.GetComponent<MeshRenderer>().material = gardensInfo.Garden_Material;
+            Building.SetTiles(tiles);
+            Building = null;
         }
         
         public void Destroy()
         {
-            MonoBehaviour.Destroy(garden.gameObject);
-            garden = null;
+            MonoBehaviour.Destroy(Building.gameObject);
+            Building = null;
         }
         
         public void VisualizationGarden(Vector2Int position, bool canPlace)
         {
-            garden.transform.position = new Vector3(position.x + 1,settings.yOffset,position.y + 1);
-            garden.Visual.GetComponent<MeshRenderer>().material = canPlace
+            Building.transform.position = new Vector3(position.x + 1,settings.yOffset,position.y + 1);
+            Building.Visual.GetComponent<MeshRenderer>().material = canPlace
                                                                 ? gardensInfo.Ghost_Material
                                                                 : gardensInfo.RedGhost_Material;
         }

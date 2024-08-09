@@ -48,7 +48,7 @@ namespace Code.Grid
                     for (var y = 0; y < info.Size.y; y++)
                     {
                         var index = new Vector2Int(x + localPosition.x + info.Position.x, y + localPosition.z + +info.Position.z);
-                        var tile = new Tile(index, info.Type, TileState.Clear);
+                        var tile = new Tile(index, info.Type);
                         if (tiles[tile.Index.x, tile.Index.y] != null)
                         {
                             throw new ArgumentOutOfRangeException("На этом месте уже есть тайл. Перепроверь позиции гридов");

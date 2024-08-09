@@ -1,9 +1,9 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:Template name="Tools" src="project://database/Assets/UI/Documents/Tools.uxml?fileID=9197481963319205126&amp;guid=cdc66b5a73566e242b07b92f63a1f297&amp;type=3#Tools" />
-    <ui:VisualElement name="Left" style="align-items: flex-start; align-self: flex-start; justify-content: center; height: 70%; width: 128px; flex-shrink: 0;">
+    <ui:VisualElement name="Left" style="align-items: flex-start; align-self: flex-start; justify-content: center; flex-shrink: 0; position: absolute; left: 0; top: 0; right: auto; bottom: 0;">
         <ui:Instance template="Tools" name="Tools" style="align-self: flex-start;" />
     </ui:VisualElement>
-    <ui:VisualElement name="Bottom" style="flex-grow: 0; width: 100%; height: 30%; justify-content: flex-end; align-self: center; flex-shrink: 1;">
+    <ui:VisualElement name="Bottom" style="flex-grow: 0; justify-content: flex-end; align-self: center; flex-shrink: 1; position: absolute; bottom: 0; left: 0; right: 0;">
         <ui:VisualElement name="Container" style="flex-grow: 0; width: 50%; height: 100%; align-self: center; flex-shrink: 0; align-items: center; flex-direction: column-reverse;" />
     </ui:VisualElement>
 </ui:UXML>

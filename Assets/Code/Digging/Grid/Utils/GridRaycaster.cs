@@ -1,11 +1,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Code.Grid.Utils
+namespace Code.Digging.Grid.Utils
 {
     public static class GridRaycaster
     {
-        public static Vector2Int GetRaycastPosition()
+        public static Vector2Int GetRaycastIntPosition()
         {
             var ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
             var plane = new Plane(Vector3.up, Vector3.zero);
