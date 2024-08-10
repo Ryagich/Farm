@@ -1,7 +1,6 @@
-using Code.Digging.Grid;
 using UnityEngine;
 
-namespace Code.Grid
+namespace Code.Digging.Grid
 {
     public class GridParent : MonoBehaviour
     {

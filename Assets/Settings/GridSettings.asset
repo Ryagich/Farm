@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Info>k__BackingField:
   - <Position>k__BackingField: {x: 0, y: 0, z: 0}
-    <Size>k__BackingField: {x: 3, y: 3}
+    <Size>k__BackingField: {x: 2, y: 6}
     <Type>k__BackingField: 0
-  - <Position>k__BackingField: {x: 3, y: 0, z: 0}
-    <Size>k__BackingField: {x: 5, y: 5}
+  - <Position>k__BackingField: {x: 2, y: 0, z: 0}
+    <Size>k__BackingField: {x: 2, y: 2}
     <Type>k__BackingField: 0
   <yOffset>k__BackingField: 0.01
   <TilePref>k__BackingField: {fileID: 7887784229667771915, guid: 80e6cdc1ec6007445b69a9938f7584f8, type: 3}

@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
-using Code.Digging.Grid;
+using System.Linq;
+using Code.Grid;
 using UnityEngine;
 
-namespace Code.Grid
+namespace Code.Digging.Grid
 {
     public class GridSpawner
     {
@@ -16,11 +17,9 @@ namespace Code.Grid
 
         private Tile[,] GetEmptyTiles()
         {
-            var startPosition = settings.Info[0].Position;
-            var endPosition = settings.Info[^1].Position;
-            var endSize = settings.Info[^1].Size;
-            return new Tile[endPosition.x - startPosition.x + endSize.x,
-                            endPosition.z - startPosition.z + endSize.y];
+            var maxX = settings.Info.Max(info => info.Position.x + info.Size.x);
+            var maxY = settings.Info.Max(info => info.Position.y + info.Size.y);
+            return new Tile[maxX, maxY];
         }
 
         public void CreateGrid(out Tile[,] tiles, out List<GridParent> parents, out List<GameObject> planes)
@@ -33,13 +32,12 @@ namespace Code.Grid
             foreach (var info in settings.Info)
             {
                 var parent = MonoBehaviour.Instantiate(settings.Parent);
-                var localPosition = startPosition;
                 var plane = MonoBehaviour.Instantiate(settings.TilePref);
                 var gridPlaneTransform = plane.transform;
-                gridPlaneTransform.position = info.Position;
+                gridPlaneTransform.position = new Vector3(info.Position.x,0,info.Position.y);
                 gridPlaneTransform.localScale = new Vector3(-info.Size.x, gridPlaneTransform.localScale.y, info.Size.y);
                 
-                parent.transform.position = info.Position;
+                parent.transform.position = new Vector3(info.Position.x,0,info.Position.y);
                 parent.SetSize(new Vector2Int(info.Size.x, info.Size.y));
                 parent.SetType(info.Type);
                 
@@ -47,7 +45,7 @@ namespace Code.Grid
                 {
                     for (var y = 0; y < info.Size.y; y++)
                     {
-                        var index = new Vector2Int(x + localPosition.x + info.Position.x, y + localPosition.z + +info.Position.z);
+                        var index = new Vector2Int(x + startPosition.x + info.Position.x, y + startPosition.y + +info.Position.y);
                         var tile = new Tile(index, info.Type);
                         if (tiles[tile.Index.x, tile.Index.y] != null)
                         {
