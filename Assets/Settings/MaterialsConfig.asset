@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7041d07b8614f1fac1332d49ab0ecb8, type: 3}
+  m_Name: MaterialsConfig
+  m_EditorClassIdentifier: 
+  <Ghost_Material>k__BackingField: {fileID: 2100000, guid: 3d4ae7c7b1d942843bd1b266e0d5ba9d, type: 2}
+  <RedGhost_Material>k__BackingField: {fileID: 2100000, guid: 66084adb77a2e334aaf40700278bc837, type: 2}
+  <Garden_Material>k__BackingField: {fileID: 2100000, guid: 67f1a89d699567f48832893c01c2242a, type: 2}
+  <ClearMaterial>k__BackingField: {fileID: 2100000, guid: 583b0d1e2d1ae4b4a88b77747501b9b0, type: 2}
+  <BusyMaterial>k__BackingField: {fileID: 7211448773848044386, guid: fa5f207cedb083641acb4c0b21d408bf, type: 3}

@@ -32,7 +32,7 @@ namespace Code.PlayerMovement
         private void OnTryMove(InputAction.CallbackContext context)
         {
             var newVelocity = context.ReadValue<Vector2>();
-            if (gameStateC.GameState.Value == GameStates.Redactor)
+            if (gameStateC.GameState.Value != GameStates.Game)
             {
                 newVelocity = Vector2.zero;
             }

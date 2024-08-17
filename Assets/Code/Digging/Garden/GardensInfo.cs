@@ -8,9 +8,6 @@ namespace Code.Digging.Garden
     public class GardensInfo : ScriptableObject
     {
         [field: SerializeField] public List<GardenInfo> Info { get; private set; }
-        [field: SerializeField] public Material Ghost_Material { get; private set; }
-        [field: SerializeField] public Material RedGhost_Material { get; private set; }
-        [field: SerializeField] public Material Garden_Material { get; private set; }
         [field: SerializeField] public Building.Building BuildingPref { get; private set; }
 
         private void OnValidate()

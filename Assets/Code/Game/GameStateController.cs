@@ -8,19 +8,9 @@ namespace Code.Game
         public ReactiveProperty<GameStates> GameState { get; private set; } = new();
         public bool IsMoving { get; set; }
 
-        public void ChangeState()
+        public void ChangeState(GameStates newState)
         {
-            switch (GameState.Value)
-            {
-                case GameStates.Game:
-                    GameState.Value = GameStates.Redactor;
-                    break;
-                case GameStates.Redactor:
-                    GameState.Value = GameStates.Game;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(GameState));
-            }
+            GameState.Value = newState;
         }
     }
 
@@ -28,5 +18,7 @@ namespace Code.Game
     {
         Game,
         Redactor,
+        Building,
+        Expansion
     }
 }

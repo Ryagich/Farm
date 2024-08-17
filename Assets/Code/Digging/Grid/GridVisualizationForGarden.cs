@@ -1,11 +1,18 @@
 using System.Collections.Generic;
-using Code.Grid;
+using Code.Materials;
 using UnityEngine;
 
 namespace Code.Digging.Grid
 {
     public class GridVisualizationForGarden
     {
+        private MaterialsConfig materials;
+        
+        private GridVisualizationForGarden(MaterialsConfig materials)
+        {
+            this.materials = materials;
+        }
+        
         public void SetTilesPosition(List<Tile> tiles, List<GameObject> gardenTiles)
         {
             foreach (var tile in gardenTiles)
@@ -26,8 +33,8 @@ namespace Code.Digging.Grid
             for (var i = 0; i < tiles.Count; i++)
             {
                 gardenTiles[i].GetComponent<MeshRenderer>().material = tiles[i].IsFree
-                                                                     ? settings.ClearMaterial
-                                                                     : settings.BusyMaterial;
+                                                                     ? materials.ClearMaterial
+                                                                     : materials.BusyMaterial;
             }
         }
     }

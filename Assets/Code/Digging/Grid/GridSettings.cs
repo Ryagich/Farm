@@ -11,8 +11,6 @@ namespace Code.Digging.Grid
         [field: SerializeField] public float yOffset { get; private set; } = .01f;
         [field: SerializeField] public GameObject TilePref { get; private set; }
         [field: SerializeField] public GridParent Parent { get; private set; }
-        [field: SerializeField] public Material ClearMaterial { get; private set; }
-        [field: SerializeField] public Material BusyMaterial { get; private set; }
         private void OnValidate()
         {
             Info.Sort( (a, b) => a.Position.x != b.Position.x

@@ -12,10 +12,11 @@ namespace Code.Digging.Grid
 
         public Building.Building Building { get; private set; } = null;
         
-        public Tile(Vector2Int index, TileTypes type)
+        public Tile(Vector2Int index, TileTypes type,Building.Building building = null)
         {
             Index = index;
             Type = type;
+            Building = building;
         }
 
         public void SetBuilding(Building.Building newBuilding)

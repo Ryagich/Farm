@@ -46,7 +46,7 @@ namespace Code.Building
         private void ShowMenu(InputAction.CallbackContext context)
         {
             if (context.phase == InputActionPhase.Canceled
-             && gameStateController.GameState.Value is GameStates.Redactor
+             && gameStateController.GameState.Value is GameStates.Building
              && gardenSpawner.Building == null
              && gridMediator.TryGetTileOnMouse(out var tile) && !tile.IsFree)
             {

@@ -92,7 +92,7 @@ namespace Code.Digging
         
         private void OnCancel(InputAction.CallbackContext context)
         {
-            if (gameStateC.GameState.Value == GameStates.Redactor
+            if (gameStateC.GameState.Value == GameStates.Building
                 && context.phase == InputActionPhase.Canceled
                 && coroutine != null)
             {

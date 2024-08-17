@@ -10,14 +10,10 @@
     border-bottom-left-radius: 50%;
 }
 
-.Tools_Root {
-    width: 70px;
-    height: 70px;
-    background-color: rgb(147, 147, 147);
-}
-
 .tool-button:hover {
     background-color: rgba(137, 137, 137, 0.43);
+    width: 64px;
+    height: 64px;
     transition-property: width, height;
     transition-duration: 0.025s, 0.025s;
 }

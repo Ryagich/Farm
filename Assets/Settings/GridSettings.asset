@@ -13,10 +13,13 @@ MonoBehaviour:
   m_Name: GridSettings
   m_EditorClassIdentifier: 
   <Info>k__BackingField:
-  - <Position>k__BackingField: {x: 0, y: 0, z: 0}
-    <Size>k__BackingField: {x: 2, y: 6}
+  - <Position>k__BackingField: {x: 0, y: 0}
+    <Size>k__BackingField: {x: 3, y: 8}
     <Type>k__BackingField: 0
-  - <Position>k__BackingField: {x: 2, y: 0, z: 0}
+  - <Position>k__BackingField: {x: 3, y: 1}
+    <Size>k__BackingField: {x: 2, y: 2}
+    <Type>k__BackingField: 0
+  - <Position>k__BackingField: {x: 3, y: 4}
     <Size>k__BackingField: {x: 2, y: 2}
     <Type>k__BackingField: 0
   <yOffset>k__BackingField: 0.01

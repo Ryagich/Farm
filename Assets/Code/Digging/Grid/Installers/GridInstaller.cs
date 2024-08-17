@@ -7,7 +7,7 @@ namespace Code.Grid.Installers
     public class GridInstaller : MonoInstaller
     {
         [SerializeField] private GridSettings _settings;
-        
+
         public override void InstallBindings()
         {
             Container.Bind<GridSettings>().FromInstance(_settings).AsSingle();

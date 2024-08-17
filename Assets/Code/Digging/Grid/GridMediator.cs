@@ -10,13 +10,12 @@ namespace Code.Digging.Grid
 {
     public class GridMediator
     {
+        public List<GridInfo> Info { get; private set; } = new();
         private GridSettings settings;
         private VisualGridSeparation separation;
         private GridVisualizationForGarden visualizationForGarden;
-        
-        private Tile[,] tiles;
-        private List<GridParent> parents;
-        private List<GameObject> planes;
+        private GridSpawner spawner;
+
         private List<GameObject> gardenTiles;
 
         private GridMediator(GridSettings settings,
@@ -28,12 +27,11 @@ namespace Code.Digging.Grid
            this.settings = settings;
            this.separation = separation;
            this.visualizationForGarden = visualizationForGarden;
-
-           spawner.CreateGrid(out Tile[,] tiles, out List<GridParent> parents, out List<GameObject> planes);
-           this.tiles = tiles;
-           this.parents = parents;
-           this.planes = planes;
+           this.spawner = spawner;
            
+           Info = settings.Info;
+           
+           spawner.CreateGrid();
            gameStateController.GameState.Subscribe(OnChangedGameState);
         }
 
@@ -62,7 +60,7 @@ namespace Code.Digging.Grid
 
         public bool CanPlace(Vector2Int size)
         {
-           var currTiles = tiles.GetTilesAround(GridRaycaster.GetRaycastIntPosition(),size);
+           var currTiles = spawner.Tiles.GetTilesAround(GridRaycaster.GetRaycastIntPosition(),size);
            if (currTiles.Count < size.x * size.y)
            {
                return false;
@@ -80,7 +78,7 @@ namespace Code.Digging.Grid
         public List<Tile> ChangeGardenTilesState(Vector2Int size, Building.Building building)
         {
             var position = GridRaycaster.GetRaycastIntPosition();
-            var tilesAround = tiles.GetTilesAround(position, size);
+            var tilesAround = spawner.Tiles.GetTilesAround(position, size);
             
             foreach (var tile in tilesAround)
             {
@@ -91,18 +89,18 @@ namespace Code.Digging.Grid
         
         public void VisualizationTiles(Vector2Int size, Vector2Int position)
         {
-            visualizationForGarden.SetTilesPosition(tiles.GetTilesAround(position, size),gardenTiles);
-            visualizationForGarden.PaintTiles(tiles.GetTilesAround(position, size),gardenTiles, settings);
+            visualizationForGarden.SetTilesPosition(spawner.Tiles.GetTilesAround(position, size),gardenTiles);
+            visualizationForGarden.PaintTiles(spawner.Tiles.GetTilesAround(position, size),gardenTiles, settings);
         }
 
         public bool TryGetTileOnMouse(out Tile tile)
         {
             tile = null;
             var position = GridRaycaster.GetRaycastIntPosition();
-            if (position.x >= 0 && position.x < tiles.GetLength(0)
-             && position.y >= 0 && position.y < tiles.GetLength(1))
+            if (position.x >= 0 && position.x < spawner.Tiles.GetLength(0)
+             && position.y >= 0 && position.y < spawner.Tiles.GetLength(1))
             {
-                tile = tiles[position.x, position.y];
+                tile = spawner.Tiles[position.x, position.y];
                 return true;
             }
             return false;
@@ -113,13 +111,11 @@ namespace Code.Digging.Grid
             switch (currentState)
             {
                 case GameStates.Game:
-                    separation.UnDraw(parents);
+                    separation.UnDraw(spawner.Parents);
                     break;
-                case GameStates.Redactor:
-                    separation.Draw(parents);
+                case GameStates.Redactor or GameStates.Building or GameStates.Expansion:
+                    separation.Draw(spawner.Parents);
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(currentState));
             }
         }
     }

@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Styles/Tool_Button.uss?fileID=7433441132597879392&amp;guid=96fe6198dee1947418bdef4f6c6971fd&amp;type=3#Tool_Button" />
+    <ui:VisualElement class="tool-button">
+        <ui:VisualElement name="Icon" style="flex-grow: 1; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; background-image: url(&apos;project://database/Assets/Images/box.png?fileID=2800000&amp;guid=cf5e4c9bde668e94b8a613820b132be0&amp;type=3#box&apos;); margin-top: 8px; margin-right: 8px; margin-bottom: 8px; margin-left: 8px;" />
+    </ui:VisualElement>
+</ui:UXML>

@@ -44,14 +44,25 @@ namespace Code.UI.Storage
 
         private void ShowStorage(GameStates state)
         {
-           coroutine = StartCoroutine(ShowStorageCor(state));
+            if (coroutine != null)
+            {
+                StopCoroutine(coroutine);
+            }
+            coroutine = StartCoroutine(ShowStorageCor(state));
         }
+
+        private VisualElement storage;
+        private bool isDown;
         
         private IEnumerator ShowStorageCor(GameStates state)
         {
-            if (state == GameStates.Redactor)
+            if (state == GameStates.Building)
             {
-                var storage = _storageTree.CloneTree();
+                isDown = false;
+
+                ClearContainer();
+
+                storage = _storageTree.CloneTree();
                 storage.style.transitionDuration = new List<TimeValue> { new(_translation, TimeUnit.Second) };
                 storage.style.transitionTimingFunction = new StyleList<EasingFunction>(new List<EasingFunction> { new (_easing) });
                 container.Add(storage);
@@ -63,16 +74,26 @@ namespace Code.UI.Storage
                 yield return wait;
                 StorageShowed?.Invoke();
             }
-            if (state == GameStates.Game)
+            else
             {
-                if (coroutine != null)
+                if (storage != null && !isDown)
                 {
-                    StopCoroutine(coroutine);
+                    isDown = true;
+                    storage.style.marginBottom = _startMargin * 2;
+                    yield return wait;
+                    StorageHided?.Invoke();
+                    
+                    ClearContainer();
                 }
-                coroutine = null;
-                container.Clear();
-                StorageHided?.Invoke();
             }
+            coroutine = null;
+        }
+
+        private void ClearContainer()
+        {
+            storage = null;
+            container.Clear();
+            StorageHided?.Invoke();
         }
     }
 }
