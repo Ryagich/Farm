@@ -2,7 +2,6 @@
 using Code.Digging.Garden;
 using Code.Digging.Grid;
 using Code.Game;
-using Code.Grid;
 using Code.Input;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -19,16 +18,18 @@ namespace Code.Building
         private GridSpawner gridSpawner;
         private GardenSpawner gardenSpawner;
         private DiggingController diggingController;
-        
+
+        private VisualElement menu = null;
+
         private BuildingMenu(
-            InputKeys keys,
-            UIDocument screen,
-            GameStateController gameStateController,
-            BuildingMenuConfig config,
-            GridMediator gridMediator,
-            GardenSpawner gardenSpawner,
-            DiggingController diggingController
-        )
+                InputKeys keys,
+                UIDocument screen,
+                GameStateController gameStateController,
+                BuildingMenuConfig config,
+                GridMediator gridMediator,
+                GardenSpawner gardenSpawner,
+                DiggingController diggingController
+            )
         {
             this.diggingController = diggingController;
             this.gardenSpawner = gardenSpawner;
@@ -38,11 +39,11 @@ namespace Code.Building
             this.config = config;
             this.gridMediator = gridMediator;
 
+            gameStateController.UIElementClicked += CloseMenu;
             keys.RightMouse.action.canceled += ShowMenu;
         }
 
-        private VisualElement menu = null;
-        
+
         private void ShowMenu(InputAction.CallbackContext context)
         {
             if (context.phase == InputActionPhase.Canceled
@@ -51,7 +52,7 @@ namespace Code.Building
              && gridMediator.TryGetTileOnMouse(out var tile) && !tile.IsFree)
             {
                 CloseMenu();
-                
+
                 menu = config.MenuTree.CloneTree().Q<VisualElement>();
                 menu.style.position = Position.Absolute;
                 var pos = Mouse.current.position.ReadValue();
@@ -81,18 +82,18 @@ namespace Code.Building
             MonoBehaviour.Destroy(tile.Building.gameObject);
             CloseMenu();
         }
-        
+
         private void Move(Tile tile)
         {
             var building = tile.Building;
-            building.Tiles.ForEach(t=> t.SetBuilding(null));
-            
-            diggingController.ShowGarden(building.Size);
+            var tiles = building.Tiles;
+            tiles.ForEach(t => t.SetBuilding(null));
+            diggingController.ShowGarden(building.Size, tiles, building.transform.position);
             MonoBehaviour.Destroy(building.gameObject);
-            
+
             CloseMenu();
         }
-        
+
         private void CloseMenu()
         {
             if (menu != null)

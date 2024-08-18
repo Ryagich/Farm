@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using Code.Digging.Garden;
 using Code.Digging.Grid;
 using Code.Digging.Grid.Utils;
@@ -40,9 +41,14 @@ namespace Code.Digging
             if (context.phase == InputActionPhase.Canceled
                 && inputHandler.ControlPressed)
             {
+                var oldSize = gardenSpawner.Building.Size;
                 var size = new Vector2Int(gardenSpawner.Building.Size.y, gardenSpawner.Building.Size.x);
+                var tiles = gardenSpawner.Building.Tiles;
+                var lastPos = gardenSpawner.Building.LastPosition == default
+                                  ? gardenSpawner.Building.transform.position
+                                  : gardenSpawner.Building.LastPosition;
                 gardenSpawner.Destroy();
-                gardenSpawner.Spawn(size);
+                gardenSpawner.Spawn(size, tiles, lastPos, oldSize);
             }
         }
         
@@ -51,14 +57,24 @@ namespace Code.Digging
             ShowGarden(info.Size);
         }
         
-        public void ShowGarden(Vector2Int size)
+        public void ShowGarden(Vector2Int size, List<Tile> tiles = null,Vector3 lastPos = default)
         {
             if (coroutine != null)
             {
+                var gardenTiles = gardenSpawner.Building.Tiles;
+                if (gardenTiles?.Count > 0)
+                {
+                    gardenTiles.ForEach(tile => tile.SetBuilding(gardenSpawner.Building));
+                    gardenSpawner.Building.transform.position = gardenSpawner.Building.LastPosition;
+                    gardenSpawner.SetGarden(gardenTiles);
+                }
+                else
+                {
+                    gardenSpawner.Destroy();
+                }
                 Cancel();
-                gardenSpawner.Destroy();
             }
-            gardenSpawner.Spawn(size);
+            gardenSpawner.Spawn(size, tiles, lastPos);
             gridMediator.SetGardenTiles(size);
             coroutine = StartCoroutine(MoveCor());
             
@@ -96,8 +112,22 @@ namespace Code.Digging
                 && context.phase == InputActionPhase.Canceled
                 && coroutine != null)
             {
+                var tiles = gardenSpawner.Building.Tiles;
+                if (tiles?.Count > 0)
+                {
+                    tiles.ForEach(tile => tile.SetBuilding(gardenSpawner.Building));
+                    gardenSpawner.Building.transform.position = gardenSpawner.Building.LastPosition;
+                    if (gardenSpawner.Building.LastSize != default)
+                    {
+                        gardenSpawner.Building.SetSize(gardenSpawner.Building.LastSize);
+                    }
+                    gardenSpawner.SetGarden(tiles);
+                }
+                else
+                {
+                    gardenSpawner.Destroy();
+                }
                 Cancel();
-                gardenSpawner.Destroy();
             }
         }
         

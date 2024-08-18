@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Code.Digging;
 using Code.Digging.Garden;
+using Code.Game;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Zenject;
@@ -20,6 +21,7 @@ namespace Code.UI.Storage
         
         private UIDocument screen;
         private GardensInfo gardensInfo;
+        private GameStateController gameStateController;
         
         private VisualElement container;
         private WaitForSeconds wait;
@@ -29,11 +31,13 @@ namespace Code.UI.Storage
         [Inject]
         private void Constructor(UIDocument screen,
                                  DiggingController diggingC,
-                                 GardensInfo gardensInfo)
+                                 GardensInfo gardensInfo,
+                                 GameStateController gameStateController)
         {
             this.screen = screen;
             this.gardensInfo = gardensInfo;
             this.diggingC = diggingC;
+            this.gameStateController = gameStateController;
         }
         
         private void Start()
@@ -88,6 +92,7 @@ namespace Code.UI.Storage
         private void OnClicked(GardenInfo info)
         {
             diggingC.ShowGarden(info);
+            gameStateController.UIElementClicked?.Invoke();
         }
     }
 }

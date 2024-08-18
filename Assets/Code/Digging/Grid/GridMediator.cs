@@ -24,22 +24,22 @@ namespace Code.Digging.Grid
                              GridVisualizationForGarden visualizationForGarden,
                              GameStateController gameStateController)
         {
-           this.settings = settings;
-           this.separation = separation;
-           this.visualizationForGarden = visualizationForGarden;
-           this.spawner = spawner;
-           
-           Info = settings.Info;
-           
-           spawner.CreateGrid();
-           gameStateController.GameState.Subscribe(OnChangedGameState);
+            this.settings = settings;
+            this.separation = separation;
+            this.visualizationForGarden = visualizationForGarden;
+            this.spawner = spawner;
+
+            Info = settings.Info;
+
+            spawner.CreateGrid();
+            gameStateController.GameState.Subscribe(OnChangedGameState);
         }
 
         public void Cancel()
         {
             foreach (var tile in gardenTiles)
             {
-               MonoBehaviour.Destroy(tile);
+                MonoBehaviour.Destroy(tile);
             }
             gardenTiles.Clear();
         }
@@ -60,37 +60,33 @@ namespace Code.Digging.Grid
 
         public bool CanPlace(Vector2Int size)
         {
-           var currTiles = spawner.Tiles.GetTilesAround(GridRaycaster.GetRaycastIntPosition(),size);
-           if (currTiles.Count < size.x * size.y)
-           {
-               return false;
-           }
-           foreach (var tile in currTiles)
-           {
-               if (!tile.IsFree)
-               {
-                   return false;
-               }
-           }
-           return true;
+            var currTiles = spawner.Tiles.GetTilesAround(GridRaycaster.GetRaycastIntPosition(), size);
+            if (currTiles.Count < size.x * size.y)
+            {
+                return false;
+            }
+            foreach (var tile in currTiles)
+            {
+                if (!tile.IsFree)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
-        
+
         public List<Tile> ChangeGardenTilesState(Vector2Int size, Building.Building building)
         {
             var position = GridRaycaster.GetRaycastIntPosition();
             var tilesAround = spawner.Tiles.GetTilesAround(position, size);
-            
-            foreach (var tile in tilesAround)
-            {
-                tile.SetBuilding(building);
-            }
+            tilesAround.ForEach(tile => tile.SetBuilding(building));
             return tilesAround;
         }
-        
+
         public void VisualizationTiles(Vector2Int size, Vector2Int position)
         {
-            visualizationForGarden.SetTilesPosition(spawner.Tiles.GetTilesAround(position, size),gardenTiles);
-            visualizationForGarden.PaintTiles(spawner.Tiles.GetTilesAround(position, size),gardenTiles, settings);
+            visualizationForGarden.SetTilesPosition(spawner.Tiles.GetTilesAround(position, size), gardenTiles);
+            visualizationForGarden.PaintTiles(spawner.Tiles.GetTilesAround(position, size), gardenTiles, settings);
         }
 
         public bool TryGetTileOnMouse(out Tile tile)
@@ -98,14 +94,14 @@ namespace Code.Digging.Grid
             tile = null;
             var position = GridRaycaster.GetRaycastIntPosition();
             if (position.x >= 0 && position.x < spawner.Tiles.GetLength(0)
-             && position.y >= 0 && position.y < spawner.Tiles.GetLength(1))
+                                && position.y >= 0 && position.y < spawner.Tiles.GetLength(1))
             {
                 tile = spawner.Tiles[position.x, position.y];
                 return true;
             }
             return false;
         }
-        
+
         private void OnChangedGameState(GameStates currentState)
         {
             switch (currentState)

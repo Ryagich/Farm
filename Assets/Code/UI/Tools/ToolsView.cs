@@ -29,10 +29,19 @@ namespace Code.UI.Tools
                     gameStateController.ChangeState(GameStates.Game);
                     ShowPanel(settings.MinHeight);
                 }
+                gameStateController.UIElementClicked?.Invoke();
             });
             
-            buildingButton.RegisterCallback<ClickEvent>(_ => gameStateController.ChangeState(GameStates.Building));
-            expansionButton.RegisterCallback<ClickEvent>(_ => gameStateController.ChangeState(GameStates.Expansion));
+            buildingButton.RegisterCallback<ClickEvent>(_ =>
+                                                        {
+                                                            gameStateController.ChangeState(GameStates.Building);
+                                                            gameStateController.UIElementClicked?.Invoke();
+                                                        });
+            expansionButton.RegisterCallback<ClickEvent>(_ =>
+                                                         {
+                                                             gameStateController.ChangeState(GameStates.Expansion);
+                                                             gameStateController.UIElementClicked?.Invoke();
+                                                         });
         }
     
         private void ShowPanel(float size)

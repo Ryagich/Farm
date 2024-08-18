@@ -22,10 +22,13 @@ namespace Code.Digging.Garden
             this.materials = materials;
         }
 
-        public void Spawn(Vector2Int size)
+        public void Spawn(Vector2Int size, List<Tile> tiles = null, Vector3 lastPos = default, Vector2Int oldSize = default)
         {
             Building = MonoBehaviour.Instantiate(gardensInfo.BuildingPref);
+            Building.SetTiles(tiles);
             Building.SetSize(size);
+            Building.LastPosition = lastPos;
+            Building.LastSize = oldSize;
         }
         
         public void SetGarden(List<Tile> tiles)
@@ -45,8 +48,8 @@ namespace Code.Digging.Garden
         {
             Building.transform.position = new Vector3(position.x + 1,settings.yOffset,position.y + 1);
             Building.Visual.GetComponent<MeshRenderer>().material = canPlace
-                                                                ? materials.Ghost_Material
-                                                                : materials.RedGhost_Material;
+                                                                  ? materials.Ghost_Material
+                                                                  : materials.RedGhost_Material;
         }
     }
 }

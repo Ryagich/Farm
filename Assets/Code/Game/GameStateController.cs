@@ -5,6 +5,7 @@ namespace Code.Game
 {
     public class GameStateController
     {
+        public Action UIElementClicked;
         public ReactiveProperty<GameStates> GameState { get; private set; } = new();
         public bool IsMoving { get; set; }
 
