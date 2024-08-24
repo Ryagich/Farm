@@ -44,7 +44,7 @@ namespace Code.Digging.Garden
             Building = null;
         }
         
-        public void VisualizationGarden(Vector2Int position, bool canPlace)
+        public void HighlightGarden(Vector2Int position, bool canPlace)
         {
             Building.transform.position = new Vector3(position.x + 1,settings.yOffset,position.y + 1);
             Building.Visual.GetComponent<MeshRenderer>().material = canPlace

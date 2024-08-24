@@ -15,7 +15,7 @@ namespace Code.Digging
     public class DiggingController : MonoBehaviour
     {
         private InputKeys keys;
-        private GridMediator gridMediator;
+        private GridController gridController;
         private GardenSpawner gardenSpawner;
         private GameStateController gameStateC;
 
@@ -25,13 +25,13 @@ namespace Code.Digging
         [Inject]
         private void Constructor(InputKeys keys,
                                  InputHandler inputHandler,
-                                 GridMediator gridMediator,
+                                 GridController gridController,
                                  GardenSpawner gardenSpawner,
                                  GameStateController gameStateC)
         {
             this.keys = keys;
             this.inputHandler = inputHandler;
-            this.gridMediator = gridMediator;
+            this.gridController = gridController;
             this.gardenSpawner = gardenSpawner;
             this.gameStateC = gameStateC;
         }
@@ -75,7 +75,7 @@ namespace Code.Digging
                 Cancel();
             }
             gardenSpawner.Spawn(size, tiles, lastPos);
-            gridMediator.SetGardenTiles(size);
+            gridController.SetGardenTiles(size);
             coroutine = StartCoroutine(MoveCor());
             
             keys.LeftMouse.action.canceled += OnSet;
@@ -88,8 +88,8 @@ namespace Code.Digging
             while (true)
             {
                 var position = GridRaycaster.GetRaycastIntPosition();
-                gridMediator.VisualizationTiles(gardenSpawner.Building.Size, position);
-                gardenSpawner.VisualizationGarden(position, gridMediator.CanPlace(gardenSpawner.Building.Size));
+                gridController.HighlightTiles(gardenSpawner.Building.Size, position);
+                gardenSpawner.HighlightGarden(position, gridController.CanPlace(position, gardenSpawner.Building.Size));
                 yield return null;
             }
         }
@@ -98,9 +98,9 @@ namespace Code.Digging
         {
             if (context.phase == InputActionPhase.Canceled
                 && coroutine != null
-                && gridMediator.CanPlace(gardenSpawner.Building.Size))
+                && gridController.CanPlace(GridRaycaster.GetRaycastIntPosition(), gardenSpawner.Building.Size))
             {
-                var tiles = gridMediator.ChangeGardenTilesState(gardenSpawner.Building.Size, gardenSpawner.Building);
+                var tiles = gridController.ChangeGardenTilesState(gardenSpawner.Building.Size, gardenSpawner.Building);
                 gardenSpawner.SetGarden(tiles);
                 Cancel();
             }
@@ -136,7 +136,7 @@ namespace Code.Digging
             keys.LeftMouse.action.canceled -= OnSet;
             keys.RightMouse.action.canceled -= OnCancel;
             keys.R.action.canceled -= Rotate;
-            gridMediator.Cancel();
+            gridController.Cancel();
             StopCoroutine(coroutine);
             coroutine = null;
         }

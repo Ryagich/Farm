@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Code.Digging.Grid
@@ -8,18 +9,12 @@ namespace Code.Digging.Grid
         public Vector2Int Size { get; private set; }
         public TileTypes Type { get; private set; }
 
-        public void SetPosition(Vector2Int position)
+        public void Initialize(Vector2Int position,
+                               Vector2Int size,
+                               TileTypes type)
         {
             Position = position;
-        }
-        
-        public void SetSize(Vector2Int size)
-        {
             Size = size;
-        }
-        
-        public void SetType(TileTypes type)
-        {
             Type = type;
         }
     }

@@ -18,15 +18,14 @@ namespace Code.Grid
         public void Draw(List<GridParent> parents)
         {
             var scale = settings.TilePref.transform.localScale;
-            for (var i = 0; i < settings.Info.Count; i++)
+            for (var i = 0; i < parents.Count; i++)
             {
                 var points = new List<Vector3>();
-                var info = settings.Info[i];
-                for (var z = 0; z <= info.Size.y; z++)
+                for (var z = 0; z <= parents[i].Size.y; z++)
                 {
                     var offset = scale.z * z;
                     var p1 = new Vector3(0, -offset, settings.yOffset);
-                    var p2 = new Vector3(info.Size.x * scale.z, -offset, settings.yOffset);
+                    var p2 = new Vector3(parents[i].Size.x * scale.z, -offset, settings.yOffset);
                     if (z % 2 == 0)
                     {
                         (p1, p2) = (p2, p1);
@@ -35,11 +34,11 @@ namespace Code.Grid
                     points.Add(p2);
                 }
         
-                for (var x = info.Size.x; x >= 0; x--)
+                for (var x = parents[i].Size.x; x >= 0; x--)
                 {
                     var offset = scale.x * x;
                     var p1 = new Vector3(offset, 0, settings.yOffset);
-                    var p2 = new Vector3(offset, -info.Size.y * scale.x, settings.yOffset);
+                    var p2 = new Vector3(offset, -parents[i].Size.y * scale.x, settings.yOffset);
                     if (x % 2 == 0)
                     {
                         (p1, p2) = (p2, p1);
@@ -55,7 +54,7 @@ namespace Code.Grid
         
         public void UnDraw(List<GridParent> parents)
         {
-            for (var i = 0; i < settings.Info.Count; i++)
+            for (var i = 0; i < parents.Count; i++)
             {
                 var line = parents[i].GetComponentInChildren<LineRenderer>();
                 line.positionCount = 0;

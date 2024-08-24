@@ -14,7 +14,7 @@ namespace Code.Grid.Installers
             Container.Bind<GridSpawner>().FromNew().AsSingle();
             Container.Bind<VisualGridSeparation>().FromNew().AsSingle();
             Container.Bind<GridVisualizationForGarden>().FromNew().AsSingle();
-            Container.Bind<GridMediator>().FromNew().AsSingle();
+            Container.Bind<GridController>().FromNew().AsSingle();
         }
     }
 }

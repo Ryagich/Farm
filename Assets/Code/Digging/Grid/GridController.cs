@@ -5,20 +5,20 @@ using Code.Game;
 using Code.Grid;
 using UniRx;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Code.Digging.Grid
 {
-    public class GridMediator
+    public class GridController
     {
-        public List<GridInfo> Info { get; private set; } = new();
-        private GridSettings settings;
-        private VisualGridSeparation separation;
-        private GridVisualizationForGarden visualizationForGarden;
-        private GridSpawner spawner;
+        private readonly GridSettings settings;
+        private readonly VisualGridSeparation separation;
+        private readonly GridVisualizationForGarden visualizationForGarden;
+        private readonly GridSpawner spawner;
 
         private List<GameObject> gardenTiles;
 
-        private GridMediator(GridSettings settings,
+        private GridController(GridSettings settings,
                              GridSpawner spawner,
                              VisualGridSeparation separation,
                              GridVisualizationForGarden visualizationForGarden,
@@ -29,8 +29,6 @@ namespace Code.Digging.Grid
             this.visualizationForGarden = visualizationForGarden;
             this.spawner = spawner;
 
-            Info = settings.Info;
-
             spawner.CreateGrid();
             gameStateController.GameState.Subscribe(OnChangedGameState);
         }
@@ -39,7 +37,7 @@ namespace Code.Digging.Grid
         {
             foreach (var tile in gardenTiles)
             {
-                MonoBehaviour.Destroy(tile);
+                Object.Destroy(tile);
             }
             gardenTiles.Clear();
         }
@@ -51,16 +49,16 @@ namespace Code.Digging.Grid
             {
                 for (var y = 0; y < size.y; y++)
                 {
-                    var tile = MonoBehaviour.Instantiate(settings.TilePref);
+                    var tile = Object.Instantiate(settings.TilePref);
                     tile.SetActive(false);
                     gardenTiles.Add(tile);
                 }
             }
         }
 
-        public bool CanPlace(Vector2Int size)
+        public bool CanPlace(Vector2Int position, Vector2Int size)
         {
-            var currTiles = spawner.Tiles.GetTilesAround(GridRaycaster.GetRaycastIntPosition(), size);
+            var currTiles = spawner.Tiles.GetTilesAround(position, size);
             if (currTiles.Count < size.x * size.y)
             {
                 return false;
@@ -83,7 +81,7 @@ namespace Code.Digging.Grid
             return tilesAround;
         }
 
-        public void VisualizationTiles(Vector2Int size, Vector2Int position)
+        public void HighlightTiles(Vector2Int size, Vector2Int position)
         {
             visualizationForGarden.SetTilesPosition(spawner.Tiles.GetTilesAround(position, size), gardenTiles);
             visualizationForGarden.PaintTiles(spawner.Tiles.GetTilesAround(position, size), gardenTiles, settings);

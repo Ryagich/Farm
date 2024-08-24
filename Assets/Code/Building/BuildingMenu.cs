@@ -14,7 +14,7 @@ namespace Code.Building
         private UIDocument screen;
         private GameStateController gameStateController;
         private BuildingMenuConfig config;
-        private GridMediator gridMediator;
+        private GridController gridController;
         private GridSpawner gridSpawner;
         private GardenSpawner gardenSpawner;
         private DiggingController diggingController;
@@ -26,18 +26,18 @@ namespace Code.Building
                 UIDocument screen,
                 GameStateController gameStateController,
                 BuildingMenuConfig config,
-                GridMediator gridMediator,
+                GridController gridController,
                 GardenSpawner gardenSpawner,
                 DiggingController diggingController
             )
         {
             this.diggingController = diggingController;
             this.gardenSpawner = gardenSpawner;
-            this.gridMediator = gridMediator;
+            this.gridController = gridController;
             this.screen = screen;
             this.gameStateController = gameStateController;
             this.config = config;
-            this.gridMediator = gridMediator;
+            this.gridController = gridController;
 
             gameStateController.UIElementClicked += CloseMenu;
             keys.RightMouse.action.canceled += ShowMenu;
@@ -49,7 +49,7 @@ namespace Code.Building
             if (context.phase == InputActionPhase.Canceled
              && gameStateController.GameState.Value is GameStates.Building
              && gardenSpawner.Building == null
-             && gridMediator.TryGetTileOnMouse(out var tile) && !tile.IsFree)
+             && gridController.TryGetTileOnMouse(out var tile) && !tile.IsFree)
             {
                 CloseMenu();
 
