@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Code.Digging.Grid.Utils;
 using Code.Game;
 using Code.Grid;
@@ -30,9 +29,15 @@ namespace Code.Digging.Grid
             this.spawner = spawner;
 
             spawner.CreateGrid();
+            spawner.Extented += OnExtented;
             gameStateController.GameState.Subscribe(OnChangedGameState);
         }
 
+        private void OnExtented()
+        {
+            separation.Draw(spawner.Parents);
+        }
+        
         public void Cancel()
         {
             foreach (var tile in gardenTiles)
@@ -91,10 +96,10 @@ namespace Code.Digging.Grid
         {
             tile = null;
             var position = GridRaycaster.GetRaycastIntPosition();
-            if (position.x >= 0 && position.x < spawner.Tiles.GetLength(0)
-                                && position.y >= 0 && position.y < spawner.Tiles.GetLength(1))
+            if (position.x >= spawner.Tiles.MinX && position.x < spawner.Tiles.MaxX
+             && position.y >= spawner.Tiles.MinY && position.y < spawner.Tiles.MaxY)
             {
-                tile = spawner.Tiles[position.x, position.y];
+                tile = spawner.Tiles.GetTile(position.x, position.y);
                 return true;
             }
             return false;

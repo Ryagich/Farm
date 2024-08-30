@@ -8,7 +8,8 @@ namespace Code.Digging.Grid
 {
     public class GridSpawner
     {
-        public Tile[,] Tiles { get; private set; }
+        public event Action Extented;
+        public Tiles Tiles { get; private set; }
         public List<GridParent> Parents { get; private set; } = new();
         public List<GameObject> Planes { get; private set; } = new();
         private readonly GridSettings settings;
@@ -18,7 +19,62 @@ namespace Code.Digging.Grid
             this.settings = settings;
         }
         
-        public List<GridParent> MergeParents(List<GridParent> parents)
+        public void CreateGrid()
+        {
+            Tiles = GetEmptyTiles();
+            var startPosition = settings.Info[0].Position;
+
+            foreach (var info in settings.Info)
+            {
+                var parent = Object.Instantiate(settings.Parent);
+                parent.transform.position = new Vector3(info.Position.x, 0, info.Position.y);
+                parent.Initialize(new Vector2Int(info.Position.x, info.Position.y),
+                                  new Vector2Int(info.Size.x, info.Size.y),
+                                  info.Type);
+                for (var x = 0; x < info.Size.x; x++)
+                {
+                    for (var y = 0; y < info.Size.y; y++)
+                    {
+                        var index = new Vector2Int(x + startPosition.x + info.Position.x,
+                                                   y + startPosition.y + info.Position.y);
+                        var tile = new Tile(index, info.Type);
+                        if (Tiles.GetTile(tile.Index.x, tile.Index.y) != null)
+                        {
+                            throw new
+                                ArgumentOutOfRangeException("На этом месте уже есть тайл. Перепроверь позиции гридов");
+                        }
+                        Tiles.SetTile(tile.Index.x, tile.Index.y, tile);
+                    }
+                }
+                Parents.Add(parent);
+            }
+            Parents = MergeParents(Parents);
+            UpdatePlanes();
+        }
+
+        public void Extent(ExtensionPointer pointer)
+        {
+            var direction = pointer.Direction;
+            Tiles.Resize(direction);
+            for (var i = 0; i < pointer.Tiles.Count; i++)
+            {
+                var index = pointer.Tiles[i].Index + direction;
+                var tile = new Tile(index, pointer.Tiles[i].Type);
+                Tiles.SetTile(index.x, index.y, tile);
+                var parent = Object.Instantiate(settings.Parent);
+                parent.transform.position = new Vector3(index.x, 0, index.y);
+                parent.Initialize(new Vector2Int(index.x, index.y),
+                                  new Vector2Int(1, 1),
+                                  pointer.Tiles.First().Type);
+                Parents.Add(parent);
+            }
+            
+            MergeParents(Parents);
+            UpdatePlanes();
+            Extented?.Invoke();
+        }
+        
+        private List<GridParent> MergeParents(List<GridParent> parents)
         {
             var i = 0;
             while (i < parents.Count)
@@ -29,10 +85,11 @@ namespace Code.Digging.Grid
                     if (startParentsCount != parents.Count
                      || parents[i] == parents[j])
                         continue;
-                    if (TryMerge(parents[i], parents[j], out var newParent))
+                    if (parents[i].Type == parents[j].Type 
+                     && TryMerge(parents[i], parents[j], out var newParent))
                     {
                         var a = parents[i];
-                        var b =parents[j];
+                        var b = parents[j];
                         parents[i] = newParent;
                         parents.Remove(b);
                         Object.Destroy(a.gameObject);
@@ -51,86 +108,36 @@ namespace Code.Digging.Grid
         private bool TryMerge(GridParent a, GridParent b, out GridParent result)
         {
             result = null;
-            if (a.Position.y == b.Position.y
-             && a.Size.y == b.Size.y
-             && (a.Position.x + a.Size.x == b.Position.x
-              || b.Position.x + b.Size.x == a.Position.x))
+            var canMergeHorizontally = a.Position.y == b.Position.y && a.Size.y == b.Size.y
+                                        && (a.Position.x + a.Size.x == b.Position.x || b.Position.x + b.Size.x == a.Position.x);
+            var canMergeVertically = a.Position.x == b.Position.x && a.Size.x == b.Size.x
+                                      && (a.Position.y + a.Size.y == b.Position.y || b.Position.y + b.Size.y == a.Position.y);
+
+            if (canMergeHorizontally || canMergeVertically)
             {
-                var x = a.Position.x < b.Position.x ? a.Position.x : b.Position.x;
+                var x = Math.Min(a.Position.x, b.Position.x);
+                var y = Math.Min(a.Position.y, b.Position.y);
+
                 result = Object.Instantiate(settings.Parent);
-                result.Initialize(new Vector2Int(x, a.Position.y),
-                                  new Vector2Int(a.Size.x + b.Size.x, a.Size.y),
+                result.Initialize(new Vector2Int(x, y),
+                                  new Vector2Int(canMergeHorizontally ? a.Size.x + b.Size.x : a.Size.x,
+                                                 canMergeVertically ? a.Size.y + b.Size.y : a.Size.y),
                                   a.Type);
-                result.transform.position = new Vector3(x, 0, a.Position.y);
+                result.transform.position = new Vector3(x, 0, y);
                 return true;
             }
-            if (a.Position.x == b.Position.x
-             && a.Size.x == b.Size.x
-             && (a.Position.y + a.Size.y == b.Position.y
-              || b.Position.y + b.Size.y == a.Position.y))
-            {
-                var y = a.Position.y < b.Position.y ? a.Position.y : b.Position.y;
-                result = Object.Instantiate(settings.Parent);
-                result.Initialize(new Vector2Int(a.Position.x, y),
-                                  new Vector2Int(a.Size.x, a.Size.y + b.Size.y),
-                                  a.Type);
-                result.transform.position = new Vector3(a.Position.x, 0, y);
-                return true;
-            }
+    
             return false;
         }
         
-        public void CreateGrid()
-        {
-            Tiles = GetEmptyTiles();
-            var startPosition = settings.Info[0].Position;
-
-            foreach (var info in settings.Info)
-            {
-                var parent = Object.Instantiate(settings.Parent);
-               
-                parent.transform.position = new Vector3(info.Position.x, 0, info.Position.y);
-                parent.Initialize(new Vector2Int(info.Position.x, info.Position.y),
-                                  new Vector2Int(info.Size.x, info.Size.y),
-                                  info.Type);
-                for (var x = 0; x < info.Size.x; x++)
-                {
-                    for (var y = 0; y < info.Size.y; y++)
-                    {
-                        var index = new Vector2Int(x + startPosition.x + info.Position.x,
-                                                   y + startPosition.y + info.Position.y);
-                        var tile = new Tile(index, info.Type);
-                        if (Tiles[tile.Index.x, tile.Index.y] != null)
-                        {
-                            throw new
-                                ArgumentOutOfRangeException("На этом месте уже есть тайл. Перепроверь позиции гридов");
-                        }
-                        Tiles[tile.Index.x, tile.Index.y] = tile;
-                    }
-                }
-                Parents.Add(parent);
-            }
-            Parents = MergeParents(Parents);
-            InstantiatePlanes();
-        }
-
-        public void Extent(ExtensionPointer pointer)
-        {
-            var direction = pointer.Direction;
-            var tiles = new Tile[Tiles.GetLength(0) + Math.Abs(direction.x), Tiles.GetLength(1) + Math.Abs(direction.y)];
-            {
-                
-            }
-        }
-        
-        private Tile[,] GetEmptyTiles()
+        private Tiles GetEmptyTiles()
         {
             var maxX = settings.Info.Max(info => info.Position.x + info.Size.x);
             var maxY = settings.Info.Max(info => info.Position.y + info.Size.y);
-            return new Tile[maxX, maxY];
+            return new Tiles(maxX, maxY);
         }
         
-        private void InstantiatePlanes()
+        private void UpdatePlanes()
         {
             foreach (var plane in Planes)
             {

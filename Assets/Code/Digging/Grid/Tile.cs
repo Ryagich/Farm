@@ -29,5 +29,6 @@ namespace Code.Digging.Grid
     {
         Ground,
         Shop,
+        Wall,
     }
 }

@@ -39,7 +39,7 @@ namespace Code.Digging
         private void Rotate(InputAction.CallbackContext context)
         {
             if (context.phase == InputActionPhase.Canceled
-                && inputHandler.ControlPressed)
+             && inputHandler.ControlPressed)
             {
                 var oldSize = gardenSpawner.Building.Size;
                 var size = new Vector2Int(gardenSpawner.Building.Size.y, gardenSpawner.Building.Size.x);

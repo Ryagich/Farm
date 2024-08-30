@@ -9,34 +9,28 @@ using Zenject;
 
 namespace Code.Digging.Grid.Extension
 {
-    public class ExtensionFounder : MonoBehaviour
+    public class ExtensionFounder : ITickable
     {
         private GameStateController gameStateController;
         private GridSettings gridSettings;
-        private InputKeys keys;
         private MaterialsConfig materials;
         private LayersConfig layers;
-        private GridExtension gridExtension;
         private GridSpawner spawner;
         
         private List<GameObject> tiles = new();
         private ExtensionPointer currentPointer;
 
-        [Inject]
-        private void Constructor(GameStateController gameStateController,
+        private ExtensionFounder(GameStateController gameStateController,
                                  GridSettings gridSettings,
                                  InputKeys keys,
                                  MaterialsConfig materials,
                                  LayersConfig layers,
-                                 GridExtension gridExtension,
                                  GridSpawner spawner)
         {
             this.gameStateController = gameStateController;
             this.gridSettings = gridSettings;
-            this.keys = keys;
             this.materials = materials;
             this.layers = layers;
-            this.gridExtension = gridExtension;
             this.spawner = spawner;
             
             keys.LeftMouse.action.canceled += ExtentGrid;
@@ -55,11 +49,10 @@ namespace Code.Digging.Grid.Extension
             if (currentPointer != null)
             {
                 spawner.Extent(currentPointer);
-                Debug.Log($"ExtentGrid");
             }
         }
 
-        public void Update()
+        public void Tick()
         {
             if (gameStateController.GameState.Value == GameStates.Expansion)
                 if (TryGetRaycastExtension(out var pointer))
@@ -72,10 +65,10 @@ namespace Code.Digging.Grid.Extension
                         for (var i = 0; i < pointer.Tiles.Count; i++)
                         {
                             tiles[i].SetActive(true);
-                            Debug.Log($"Direction {pointer.Direction}");
-                            tiles[i].transform.position = new Vector3(pointer.Tiles[i].Index.x + pointer.Direction.x + 1,
-                                                                      0,
-                                                                      pointer.Tiles[i].Index.y + pointer.Direction.y);
+                            tiles[i].transform.position =
+                                new Vector3(pointer.Tiles[i].Index.x + pointer.Direction.x + 1,
+                                            0,
+                                            pointer.Tiles[i].Index.y + pointer.Direction.y);
                             tiles[i].GetComponent<MeshRenderer>().material = materials.Ghost_Material;
                         }
                     }
@@ -95,7 +88,7 @@ namespace Code.Digging.Grid.Extension
         {
             while (tiles.Count < pointer.Tiles.Count)
             {
-                var tile = Instantiate(gridSettings.TilePref);
+                var tile = Object.Instantiate(gridSettings.TilePref);
                 tiles.Add(tile);
             }
         }

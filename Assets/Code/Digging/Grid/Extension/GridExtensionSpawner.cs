@@ -17,7 +17,7 @@ namespace Code.Digging.Grid.Extension
         private GridSpawner spawner;
 
         private List<ExtensionPointer> extensions = new();
-
+        
         private GridExtensionSpawner(GameStateController gameStateController,
                                      GridController gridController,
                                      GridExtensionSettings extensionSettings,
@@ -27,10 +27,17 @@ namespace Code.Digging.Grid.Extension
             this.gridController = gridController;
             this.extensionSettings = extensionSettings;
             this.spawner = spawner;
-
+            
+            this.spawner.Extented += OnExtension;
             gameStateController.GameState.Subscribe(ShowExtension);
         }
 
+        private void OnExtension()
+        {
+            HideExtension();
+            ShowExtension(gameStateController.GameState.Value);
+        }
+        
         private void ShowExtension(GameStates state)
         {
             if (state != GameStates.Expansion)
@@ -42,12 +49,16 @@ namespace Code.Digging.Grid.Extension
             for (var p = 0; p < parents.Count; p++)
             {
                 var bottomTiles =
-                    GetHorizontalTilesForExtension(parents[p].Position.x, parents[p].Size.x, parents[p].Position.y, -1);
-                var topTiles = GetHorizontalTilesForExtension(parents[p].Position.x, parents[p].Size.x,
+                    GetHorizontalTilesForExtension(parents[p].Position.x, parents[p].Size.x,
+                                                                parents[p].Position.y, -1);
+                var topTiles =
+                    GetHorizontalTilesForExtension(parents[p].Position.x, parents[p].Size.x,
                                                               parents[p].Position.y + parents[p].Size.y - 1, 1);
                 var leftTiles =
-                    GetVerticalTilesForExtension(parents[p].Position.y, parents[p].Size.y, parents[p].Position.x, -1);
-                var rightTiles = GetVerticalTilesForExtension(parents[p].Position.y, parents[p].Size.y,
+                    GetVerticalTilesForExtension(parents[p].Position.y, parents[p].Size.y, 
+                                                                parents[p].Position.x, -1);
+                var rightTiles = 
+                    GetVerticalTilesForExtension(parents[p].Position.y, parents[p].Size.y,
                                                               parents[p].Position.x + parents[p].Size.x - 1, 1);
 
                 if (bottomTiles.Count > 0)
@@ -58,7 +69,8 @@ namespace Code.Digging.Grid.Extension
                     {
                         if (i + 1 < bottomTiles.Count
                          && bottomTiles[i].Index.y == bottomTiles[i + 1].Index.y
-                         && bottomTiles[i].Index.x + 1 == bottomTiles[i + 1].Index.x)
+                         && bottomTiles[i].Index.x + 1 == bottomTiles[i + 1].Index.x 
+                         && bottomTiles[i].Type == bottomTiles[i + 1].Type)
                         {
                             currentGroup.Add(bottomTiles[i + 1]);
                         }
@@ -88,11 +100,12 @@ namespace Code.Digging.Grid.Extension
                 {
                     var groupedTiles = new List<List<Tile>>();
                     var currentGroup = new List<Tile> { topTiles[0] };
-                    for (int i = 0; i < topTiles.Count; i++)
+                    for (var i = 0; i < topTiles.Count; i++)
                     {
                         if (i + 1 < topTiles.Count
                          && topTiles[i].Index.y == topTiles[i + 1].Index.y
-                         && topTiles[i].Index.x + 1 == topTiles[i + 1].Index.x)
+                         && topTiles[i].Index.x + 1 == topTiles[i + 1].Index.x
+                         && topTiles[i].Type == topTiles[i + 1].Type)
                         {
                             currentGroup.Add(topTiles[i + 1]);
                         }
@@ -122,11 +135,12 @@ namespace Code.Digging.Grid.Extension
                 {
                     var groupedTiles = new List<List<Tile>>();
                     var currentGroup = new List<Tile> { leftTiles[0] };
-                    for (int i = 0; i < leftTiles.Count; i++)
+                    for (var i = 0; i < leftTiles.Count; i++)
                     {
                         if (i + 1 < leftTiles.Count
                          && leftTiles[i].Index.x == leftTiles[i + 1].Index.x
-                         && leftTiles[i].Index.y + 1 == leftTiles[i + 1].Index.y)
+                         && leftTiles[i].Index.y + 1 == leftTiles[i + 1].Index.y
+                         && leftTiles[i].Type == leftTiles[i + 1].Type)
                         {
                             currentGroup.Add(leftTiles[i + 1]);
                         }
@@ -156,11 +170,12 @@ namespace Code.Digging.Grid.Extension
                 {
                     var groupedTiles = new List<List<Tile>>();
                     var currentGroup = new List<Tile> { rightTiles[0] };
-                    for (int i = 0; i < rightTiles.Count; i++)
+                    for (var i = 0; i < rightTiles.Count; i++)
                     {
                         if (i + 1 < rightTiles.Count
                          && rightTiles[i].Index.x == rightTiles[i + 1].Index.x
-                         && rightTiles[i].Index.y + 1 == rightTiles[i + 1].Index.y)
+                         && rightTiles[i].Index.y + 1 == rightTiles[i + 1].Index.y
+                         && rightTiles[i].Type == rightTiles[i + 1].Type)
                         {
                             currentGroup.Add(rightTiles[i + 1]);
                         }
@@ -190,14 +205,14 @@ namespace Code.Digging.Grid.Extension
             MergeExtensions();
         }
 
-
         private void MergeExtensions()
         {
             var extensionsByDirection = extensions.GroupBy(ext => ext.Direction);
             foreach (var byDir in extensionsByDirection)
             {
                 var groups =
-                    GetGroups(byDir, (a, b) => CanMerge(byDir.Key, a.Tiles, b.Tiles));
+                    GetGroups(byDir, (a, b) => CanMerge(byDir.Key, a.Tiles, b.Tiles) 
+                                            && a.Tiles.First().Type == b.Tiles.First().Type);
                 foreach (var group in groups)
                 {
                     var tiles = group.SelectMany(pointer => pointer.Tiles).Distinct().ToList();
@@ -250,7 +265,6 @@ namespace Code.Digging.Grid.Extension
                 throw new Exception("Unknown direction");
             }
 
-
             IEnumerable<IEnumerable<T>> GetGroups<T>(IEnumerable<T> elements, Func<T, T, bool> compare)
             {
                 var groups = new List<List<T>>();
@@ -276,61 +290,6 @@ namespace Code.Digging.Grid.Extension
                 }
                 return groups;
             }
-
-            // var sorted = new Dictionary<Vector2Int, List<ExtensionPointer>>();
-            // foreach (var extension in extensions)
-            // {
-            //     if (sorted.ContainsKey(extension.Direction))
-            //     {
-            //         sorted[extension.Direction].Add(extension);
-            //     }
-            //     else
-            //     {
-            //         sorted.Add(extension.Direction, new List<ExtensionPointer>() { extension });
-            //     }
-            // }
-            // foreach (var sort in sorted)
-            // {
-            //     // GetMergedExtension(sort.Value);
-            // }
-        }
-
-
-        // private List<ExtensionPointer> GetMergedExtension(List<ExtensionPointer> extensions)
-        // {
-        //     var result = new List<ExtensionPointer>();
-        //     TryMergeExtension();
-        // }
-
-        private bool TryMergeExtension(ExtensionPointer a, ExtensionPointer b, out ExtensionPointer newExtension)
-        {
-            newExtension = null;
-            if (a.Direction == b.Direction)
-            {
-                if (a.Direction == Vector2Int.down)
-                {
-                    if (a.Tiles.Last().Index.x + 1 == b.Tiles.First().Index.x
-                     || a.Tiles.First().Index.x - 1 == b.Tiles.First().Index.x)
-                    {
-                        var extension = Object.Instantiate(extensionSettings.ExpansionPref);
-                        var first = a.Tiles.First().Index.x < b.Tiles.First().Index.x
-                                        ? a.Tiles.First().Index
-                                        : b.Tiles.First().Index;
-                        var last = a.Tiles.Last().Index.x > b.Tiles.Last().Index.x
-                                       ? a.Tiles.Last().Index
-                                       : b.Tiles.Last().Index;
-                        extension.transform.position = new Vector3((float)(first.x + last.x + 1) / 2
-                                                                 - .25f,
-                                                                   a.transform.position.z - .5f);
-                        var tiles = a.Tiles.ToList();
-                        tiles.AddRange(b.Tiles);
-                        extension.SetValues(a.Direction, tiles);
-                        newExtension = extension;
-                        return true;
-                    }
-                }
-            }
-            return false;
         }
 
         private List<Tile> GetHorizontalTilesForExtension(int startPos, int size, int y, int offset)
@@ -339,12 +298,12 @@ namespace Code.Digging.Grid.Extension
             var result = new List<Tile>();
             for (var x = startPos; x < size + startPos; x++)
             {
-                if (tiles[x, y] != null
-                 && (y + offset < 0
-                  || y + offset >= tiles.GetLength(1)
-                  || tiles[x, y + offset] == null))
+                if (tiles.GetTile(x, y) != null
+                 && (y + offset < tiles.MinY
+                  || y + offset >= tiles.MaxY
+                  || tiles.GetTile(x, y + offset) == null))
                 {
-                    result.Add(tiles[x, y]);
+                    result.Add(tiles.GetTile(x, y));
                 }
             }
             return result;
@@ -356,12 +315,12 @@ namespace Code.Digging.Grid.Extension
             var result = new List<Tile>();
             for (var y = startPos; y < size + startPos; y++)
             {
-                if (tiles[x, y] != null
-                 && (x + offset < 0
-                  || x + offset >= tiles.GetLength(0)
-                  || tiles[x + offset, y] == null))
+                if (tiles.GetTile(x, y) != null
+                 && (x + offset < tiles.MinX
+                  || x + offset >= tiles.MaxX
+                  || tiles.GetTile(x + offset, y) == null))
                 {
-                    result.Add(tiles[x, y]);
+                    result.Add(tiles.GetTile(x, y));
                 }
             }
             return result;
