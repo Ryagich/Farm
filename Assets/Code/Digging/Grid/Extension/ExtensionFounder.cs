@@ -15,23 +15,26 @@ namespace Code.Digging.Grid.Extension
         private GridSettings gridSettings;
         private MaterialsConfig materials;
         private LayersConfig layers;
-        private GridSpawner spawner;
+        private GridController gridController;
         
         private List<GameObject> tiles = new();
         private ExtensionPointer currentPointer;
-
+        private GridExtensionSpawner gridExtensionSpawner;
+        
         private ExtensionFounder(GameStateController gameStateController,
                                  GridSettings gridSettings,
                                  InputKeys keys,
                                  MaterialsConfig materials,
                                  LayersConfig layers,
-                                 GridSpawner spawner)
+                                 GridController gridController,
+                                 GridExtensionSpawner gridExtensionSpawner)
         {
             this.gameStateController = gameStateController;
             this.gridSettings = gridSettings;
             this.materials = materials;
             this.layers = layers;
-            this.spawner = spawner;
+            this.gridController = gridController;
+            this.gridExtensionSpawner = gridExtensionSpawner;
             
             keys.LeftMouse.action.canceled += ExtentGrid;
 
@@ -48,7 +51,8 @@ namespace Code.Digging.Grid.Extension
         {
             if (currentPointer != null)
             {
-                spawner.Extent(currentPointer);
+                gridController.Extent(currentPointer);
+                gridExtensionSpawner.OnExtension();
             }
         }
 

@@ -10,32 +10,43 @@ namespace Code.Digging.Grid
 {
     public class GridController
     {
+        public Tiles Tiles => tilesController.Tiles; 
+        public List<GridParent> Parents => parentsController.Parents; 
+        public List<GameObject> Planes => planesController.Planes;
+        
         private readonly GridSettings settings;
         private readonly VisualGridSeparation separation;
         private readonly GridVisualizationForGarden visualizationForGarden;
-        private readonly GridSpawner spawner;
-
+        
+        private readonly TilesController tilesController;
+        private readonly ParentsController parentsController;
+        private readonly PlanesController planesController;
+        
         private List<GameObject> gardenTiles;
 
         private GridController(GridSettings settings,
-                             GridSpawner spawner,
-                             VisualGridSeparation separation,
-                             GridVisualizationForGarden visualizationForGarden,
-                             GameStateController gameStateController)
+                               VisualGridSeparation separation,
+                               GridVisualizationForGarden visualizationForGarden,
+                               GameStateController gameStateController)
         {
             this.settings = settings;
             this.separation = separation;
             this.visualizationForGarden = visualizationForGarden;
-            this.spawner = spawner;
 
-            spawner.CreateGrid();
-            spawner.Extented += OnExtented;
+            tilesController = new TilesController(settings);
+            parentsController = new ParentsController(settings);
+            planesController = new PlanesController(settings);
+            planesController.UpdatePlanes(Parents);
             gameStateController.GameState.Subscribe(OnChangedGameState);
         }
 
-        private void OnExtented()
+        public void Extent(ExtensionPointer pointer)
         {
-            separation.Draw(spawner.Parents);
+            tilesController.Extent(pointer, Tiles, Parents);
+            parentsController.MergeParents(Parents);
+            planesController.UpdatePlanes(Parents);
+
+            separation.Draw(Parents);
         }
         
         public void Cancel()
@@ -63,7 +74,7 @@ namespace Code.Digging.Grid
 
         public bool CanPlace(Vector2Int position, Vector2Int size)
         {
-            var currTiles = spawner.Tiles.GetTilesAround(position, size);
+            var currTiles = Tiles.GetTilesAround(position, size);
             if (currTiles.Count < size.x * size.y)
             {
                 return false;
@@ -81,25 +92,25 @@ namespace Code.Digging.Grid
         public List<Tile> ChangeGardenTilesState(Vector2Int size, Building.Building building)
         {
             var position = GridRaycaster.GetRaycastIntPosition();
-            var tilesAround = spawner.Tiles.GetTilesAround(position, size);
+            var tilesAround = Tiles.GetTilesAround(position, size);
             tilesAround.ForEach(tile => tile.SetBuilding(building));
             return tilesAround;
         }
 
         public void HighlightTiles(Vector2Int size, Vector2Int position)
         {
-            visualizationForGarden.SetTilesPosition(spawner.Tiles.GetTilesAround(position, size), gardenTiles);
-            visualizationForGarden.PaintTiles(spawner.Tiles.GetTilesAround(position, size), gardenTiles, settings);
+            visualizationForGarden.SetTilesPosition(Tiles.GetTilesAround(position, size), gardenTiles);
+            visualizationForGarden.PaintTiles(Tiles.GetTilesAround(position, size), gardenTiles, settings);
         }
 
         public bool TryGetTileOnMouse(out Tile tile)
         {
             tile = null;
             var position = GridRaycaster.GetRaycastIntPosition();
-            if (position.x >= spawner.Tiles.MinX && position.x < spawner.Tiles.MaxX
-             && position.y >= spawner.Tiles.MinY && position.y < spawner.Tiles.MaxY)
+            if (position.x >= Tiles.MinX && position.x < Tiles.MaxX
+             && position.y >= Tiles.MinY && position.y < Tiles.MaxY)
             {
-                tile = spawner.Tiles.GetTile(position.x, position.y);
+                tile = Tiles.GetTile(position.x, position.y);
                 return true;
             }
             return false;
@@ -110,10 +121,10 @@ namespace Code.Digging.Grid
             switch (currentState)
             {
                 case GameStates.Game:
-                    separation.UnDraw(spawner.Parents);
+                    separation.UnDraw(Parents);
                     break;
                 case GameStates.Redactor or GameStates.Building or GameStates.Expansion:
-                    separation.Draw(spawner.Parents);
+                    separation.Draw(Parents);
                     break;
             }
         }

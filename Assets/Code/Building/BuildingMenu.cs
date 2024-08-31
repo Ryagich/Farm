@@ -15,13 +15,13 @@ namespace Code.Building
         private GameStateController gameStateController;
         private BuildingMenuConfig config;
         private GridController gridController;
-        private GridSpawner gridSpawner;
         private GardenSpawner gardenSpawner;
         private DiggingController diggingController;
 
         private VisualElement menu = null;
 
-        private BuildingMenu(
+        private BuildingMenu
+            (
                 InputKeys keys,
                 UIDocument screen,
                 GameStateController gameStateController,

@@ -14,25 +14,21 @@ namespace Code.Digging.Grid.Extension
         private GameStateController gameStateController;
         private GridController gridController;
         private GridExtensionSettings extensionSettings;
-        private GridSpawner spawner;
 
         private List<ExtensionPointer> extensions = new();
         
         private GridExtensionSpawner(GameStateController gameStateController,
                                      GridController gridController,
-                                     GridExtensionSettings extensionSettings,
-                                     GridSpawner spawner)
+                                     GridExtensionSettings extensionSettings)
         {
             this.gameStateController = gameStateController;
             this.gridController = gridController;
             this.extensionSettings = extensionSettings;
-            this.spawner = spawner;
             
-            this.spawner.Extented += OnExtension;
             gameStateController.GameState.Subscribe(ShowExtension);
         }
 
-        private void OnExtension()
+        public void OnExtension()
         {
             HideExtension();
             ShowExtension(gameStateController.GameState.Value);
@@ -45,7 +41,7 @@ namespace Code.Digging.Grid.Extension
                 HideExtension();
                 return;
             }
-            var parents = spawner.Parents;
+            var parents = gridController.Parents;
             for (var p = 0; p < parents.Count; p++)
             {
                 var bottomTiles =
@@ -60,12 +56,11 @@ namespace Code.Digging.Grid.Extension
                 var rightTiles = 
                     GetVerticalTilesForExtension(parents[p].Position.y, parents[p].Size.y,
                                                               parents[p].Position.x + parents[p].Size.x - 1, 1);
-
                 if (bottomTiles.Count > 0)
                 {
                     var groupedTiles = new List<List<Tile>>();
                     var currentGroup = new List<Tile> { bottomTiles[0] };
-                    for (int i = 0; i < bottomTiles.Count; i++)
+                    for (var i = 0; i < bottomTiles.Count; i++)
                     {
                         if (i + 1 < bottomTiles.Count
                          && bottomTiles[i].Index.y == bottomTiles[i + 1].Index.y
@@ -294,7 +289,7 @@ namespace Code.Digging.Grid.Extension
 
         private List<Tile> GetHorizontalTilesForExtension(int startPos, int size, int y, int offset)
         {
-            var tiles = spawner.Tiles;
+            var tiles = gridController.Tiles;
             var result = new List<Tile>();
             for (var x = startPos; x < size + startPos; x++)
             {
@@ -311,7 +306,7 @@ namespace Code.Digging.Grid.Extension
 
         private List<Tile> GetVerticalTilesForExtension(int startPos, int size, int x, int offset)
         {
-            var tiles = spawner.Tiles;
+            var tiles = gridController.Tiles;
             var result = new List<Tile>();
             for (var y = startPos; y < size + startPos; y++)
             {
