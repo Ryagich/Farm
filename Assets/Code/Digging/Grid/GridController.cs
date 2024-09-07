@@ -89,10 +89,10 @@ namespace Code.Digging.Grid
             return true;
         }
 
-        public List<Tile> ChangeGardenTilesState(Vector2Int size, Building.Building building)
+        public List<Tile> ChangeGardenTilesState(Building.Building building)
         {
             var position = GridRaycaster.GetRaycastIntPosition();
-            var tilesAround = Tiles.GetTilesAround(position, size);
+            var tilesAround = Tiles.GetTilesAround(position, building.Size);
             tilesAround.ForEach(tile => tile.SetBuilding(building));
             return tilesAround;
         }

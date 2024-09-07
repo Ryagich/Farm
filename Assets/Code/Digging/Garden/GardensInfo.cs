@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Code.Garden;
 using UnityEngine;
 
 namespace Code.Digging.Garden

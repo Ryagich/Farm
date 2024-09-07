@@ -1,8 +1,8 @@
-﻿using Code.Digging.Grid;
-using Zenject;
+﻿using Code.Grid;
 using UnityEngine;
+using Zenject;
 
-namespace Code.Grid.Installers
+namespace Code.Digging.Grid.Installers
 {
     public class GridInstaller : MonoInstaller
     {

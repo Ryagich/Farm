@@ -2,6 +2,8 @@
 using Code.Digging.Grid;
 using Code.Materials;
 using UnityEngine;
+using Object = UnityEngine.Object;
+
 
 namespace Code.Digging.Garden
 {
@@ -9,9 +11,9 @@ namespace Code.Digging.Garden
     {
         public Building.Building Building { get; private set; }
         
-        private GridSettings settings;
-        private GardensInfo gardensInfo;
-        private MaterialsConfig materials;
+        private readonly GridSettings settings;
+        private readonly GardensInfo gardensInfo;
+        private readonly MaterialsConfig materials;
         
         private GardenSpawner(GridSettings settings,
                               GardensInfo gardensInfo,
@@ -24,7 +26,7 @@ namespace Code.Digging.Garden
 
         public void Spawn(Vector2Int size, List<Tile> tiles = null, Vector3 lastPos = default, Vector2Int oldSize = default)
         {
-            Building = MonoBehaviour.Instantiate(gardensInfo.BuildingPref);
+            Building = Object.Instantiate(gardensInfo.BuildingPref);
             Building.SetTiles(tiles);
             Building.SetSize(size);
             Building.LastPosition = lastPos;
@@ -40,7 +42,7 @@ namespace Code.Digging.Garden
         
         public void Destroy()
         {
-            MonoBehaviour.Destroy(Building.gameObject);
+            Object.Destroy(Building.gameObject);
             Building = null;
         }
         

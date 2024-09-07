@@ -23,9 +23,7 @@ namespace Code.Digging.Grid
             var tiles = GetEmptyTiles();
             var startPosition = settings.Info[0].Position;
             foreach (var info in settings.Info)
-            {
                 for (var x = 0; x < info.Size.x; x++)
-                {
                     for (var y = 0; y < info.Size.y; y++)
                     {
                         var index = new Vector2Int(x + startPosition.x + info.Position.x,
@@ -38,8 +36,6 @@ namespace Code.Digging.Grid
                         }
                         tiles.SetTile(tile.Index.x, tile.Index.y, tile);
                     }
-                }
-            }
             return tiles;
         }
 

@@ -11,15 +11,16 @@ namespace Code.Digging.Grid.Extension
 {
     public class ExtensionFounder : ITickable
     {
-        private GameStateController gameStateController;
-        private GridSettings gridSettings;
-        private MaterialsConfig materials;
-        private LayersConfig layers;
-        private GridController gridController;
-        
-        private List<GameObject> tiles = new();
+        private readonly GameStateController gameStateController;
+        private readonly GridSettings gridSettings;
+        private readonly MaterialsConfig materials;
+        private readonly LayersConfig layers;
+        private readonly GridController gridController;
+
+        private readonly List<GameObject> tiles = new();
+        private readonly GridExtensionSpawner gridExtensionSpawner;
+
         private ExtensionPointer currentPointer;
-        private GridExtensionSpawner gridExtensionSpawner;
         
         private ExtensionFounder(GameStateController gameStateController,
                                  GridSettings gridSettings,

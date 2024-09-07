@@ -67,7 +67,7 @@ namespace Code.Digging.Grid
         {
             result = null;
             var canMergeHorizontally = a.Position.y == b.Position.y && a.Size.y == b.Size.y
-                                      && (a.Position.x + a.Size.x == b.Position.x ||
+                                                                    && (a.Position.x + a.Size.x == b.Position.x ||
                                                                         b.Position.x + b.Size.x == a.Position.x);
             var canMergeVertically = a.Position.x == b.Position.x && a.Size.x == b.Size.x
                                                                   && (a.Position.y + a.Size.y == b.Position.y ||

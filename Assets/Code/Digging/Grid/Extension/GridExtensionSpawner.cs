@@ -11,9 +11,9 @@ namespace Code.Digging.Grid.Extension
     //TODO: Разбить на методы.
     public class GridExtensionSpawner
     {
-        private GameStateController gameStateController;
-        private GridController gridController;
-        private GridExtensionSettings extensionSettings;
+        private readonly GameStateController gameStateController;
+        private readonly GridController gridController;
+        private readonly GridExtensionSettings extensionSettings;
 
         private List<ExtensionPointer> extensions = new();
         

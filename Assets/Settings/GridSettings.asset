@@ -17,8 +17,8 @@ MonoBehaviour:
     <Size>k__BackingField: {x: 5, y: 5}
     <Type>k__BackingField: 0
   - <Position>k__BackingField: {x: 5, y: 0}
-    <Size>k__BackingField: {x: 1, y: 5}
-    <Type>k__BackingField: 2
+    <Size>k__BackingField: {x: 5, y: 5}
+    <Type>k__BackingField: 1
   <yOffset>k__BackingField: 0.01
   <TilePref>k__BackingField: {fileID: 7887784229667771915, guid: 80e6cdc1ec6007445b69a9938f7584f8, type: 3}
   <Parent>k__BackingField: {fileID: 6626901405037870352, guid: 3f59c0205fc64fc43a8e57fe655aab3d, type: 3}

@@ -100,7 +100,7 @@ namespace Code.Digging
                 && coroutine != null
                 && gridController.CanPlace(GridRaycaster.GetRaycastIntPosition(), gardenSpawner.Building.Size))
             {
-                var tiles = gridController.ChangeGardenTilesState(gardenSpawner.Building.Size, gardenSpawner.Building);
+                var tiles = gridController.ChangeGardenTilesState(gardenSpawner.Building);
                 gardenSpawner.SetGarden(tiles);
                 Cancel();
             }
